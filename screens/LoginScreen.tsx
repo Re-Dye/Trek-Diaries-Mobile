@@ -21,6 +21,7 @@ export default function LoginScreen({ navigation }) {
             <TextInput
               className="flex p-3 bg-gray-200 rounded-xl text-gray-600"
               placeholder="enter your email"
+              keyboardType={'email-address'}
             />
           </View>
           <View className="flex-col space-y-2">
@@ -41,7 +42,7 @@ export default function LoginScreen({ navigation }) {
           </View>
           <View className="flex-row space-x-2 justify-center">
             <Text>Not a member?</Text>
-            <Text className="text-blue-600">Register now</Text>
+            <TouchableOpacity onPress={()=>navigation.navigate("Signup", {name: "Signup"})}><Text className="text-blue-600" >Register now</Text></TouchableOpacity>
           </View>
           <View className="border-b border-gray-300"></View>
           <View className="flex-row space-x-5 justify-center">
