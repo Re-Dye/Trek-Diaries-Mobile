@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "android",
-    "slug": "android",
+    "name": "TrekDiaries",
+    "slug": "TrekDiaries",
     "version": "1.0.0",
+    "scheme": "Trekking App",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -25,6 +26,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
