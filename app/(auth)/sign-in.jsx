@@ -7,7 +7,6 @@ import CustomButton from "../../components/CustomButton"
 import { Link, router } from 'expo-router'
 
 export default function SignIn() {
-
   const[form,setForm] = useState({
     email: "",
     password: ""
@@ -15,9 +14,22 @@ export default function SignIn() {
 
   const [isSubmit, setIsSubmit] = useState(false)
 
-  const submit = () => {
-    router.push("/home")
+  const submit = async () => {
+    try {
+      const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/auth/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email: form.email, password: form.password })
+      })
+      console.log(await res.json());
+    } catch (error) {
+      console.log(error);
+    }
+    // router.push("/home")
   }
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
