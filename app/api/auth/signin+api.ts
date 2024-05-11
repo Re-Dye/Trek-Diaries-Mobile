@@ -1,5 +1,7 @@
 import { ExpoRequest, ExpoResponse } from "expo-router/server";
-import { loginSchema } from "../../../lib/zodSchemas/login";
+import { loginSchema } from "../../../lib/zodSchema/login";
+import { compare } from "bcrypt";
+import { findUser } from "../../../lib/db/actions";
 
 export async function GET() {
   return ExpoResponse.json({ message: "Hello from the API!" });
@@ -24,14 +26,20 @@ export async function POST(req: ExpoRequest) {
       return null;
     }
 
-    return {
-      id: result.id,
-      name: result.name,
-      email: result.email,
-      dob: result.dob,
-      picture: result.image
-    }
+    return ExpoResponse.json(
+      {
+        id: result.id,
+        name: result.name,
+        email: result.email,
+        dob: result.dob,
+        picture: result.image,
+      },
+      { status: 200 }
+    );
   } catch {
-    return null;
+    return ExpoResponse.json(
+      { message: "Invalid credentials" },
+      { status: 400 }
+    );
   }
 }
