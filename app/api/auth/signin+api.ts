@@ -1,13 +1,13 @@
-import { ExpoRequest, ExpoResponse } from "expo-router/server";
+import { ExpoResponse } from "expo-router/server";
 import { loginSchema } from "../../../lib/zodSchema/login";
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 import { findUser } from "../../../lib/db/actions";
 
 export async function GET() {
   return ExpoResponse.json({ message: "Hello from the API!" });
 }
 
-export async function POST(req: ExpoRequest) {
+export async function POST(req: Request) {
   try {
     const { email, password } = loginSchema.parse(await req.json()); // validating the credentials
 
@@ -16,14 +16,20 @@ export async function POST(req: ExpoRequest) {
 
     if (!result) {
       //if the email is unregistered...
-      return null;
+      return ExpoResponse.json(
+        { message: "Invalid credentials" },
+        { status: 400 }
+      );
     }
 
     const isMatch = await compare(password, result.password);
 
     if (!isMatch) {
       // if password is incorrect
-      return null;
+      return ExpoResponse.json(
+        { message: "Invalid credentials" },
+        { status: 400 }
+      );
     }
 
     return ExpoResponse.json(
@@ -37,6 +43,7 @@ export async function POST(req: ExpoRequest) {
       { status: 200 }
     );
   } catch {
+    console.error(Error);
     return ExpoResponse.json(
       { message: "Invalid credentials" },
       { status: 400 }
