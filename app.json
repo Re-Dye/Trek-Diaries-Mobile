@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#161622"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "image": "./assets/splashy_logo.png",
@@ -32,7 +30,12 @@
       "output": "server"
     },
     "plugins": [
-      "expo-router",
+      [
+        "expo-router",
+        {
+          "origin": "http://localhost:8081"
+        }
+      ],
       [
         "expo-image-picker",
         {

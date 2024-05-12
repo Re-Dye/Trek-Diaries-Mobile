@@ -16,7 +16,7 @@ export default function SignIn() {
 
   const submit = async () => {
     try {
-      const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/auth/signin`, {
+      const res = await fetch(`/api/auth/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -27,7 +27,7 @@ export default function SignIn() {
     } catch (error) {
       console.log(error);
     }
-    // router.push("/home")
+    router.push("/home")
   }
 
   return (
