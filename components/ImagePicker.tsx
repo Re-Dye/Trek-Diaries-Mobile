@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import { icons } from "../constants";
 
 export default function ImagePick() {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<string | null>(null);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -28,26 +28,26 @@ export default function ImagePick() {
 
   return (
     <View className="flex space-y-4">
-      {image && 
+      {image && (
         <View className="relative w-full pt-6 pb-3 px-4 border-2 border-black-200">
-       <Image 
-        source={{ uri: image }} 
-        className="w-full h-[250px] rounded-xl" 
-        resizeMode="cover" 
-      />
-      <TouchableOpacity
-        onPress={removeImage}
-        className="absolute top-2 right-2 rounded-3xl"
-      >
-        <Image 
-          source={icons.closeImage}
-          resizeMode="contain"
-          tintColor="#7b7b8b"
-          className="w-4 h-4"
-        />
-      </TouchableOpacity>
-      </View>
-      }
+          <Image
+            source={{ uri: image }}
+            className="w-full h-[250px] rounded-xl"
+            resizeMode="cover"
+          />
+          <TouchableOpacity
+            onPress={removeImage}
+            className="absolute top-2 right-2 rounded-3xl"
+          >
+            <Image
+              source={icons.closeImage}
+              resizeMode="contain"
+              tintColor="#7b7b8b"
+              className="w-4 h-4"
+            />
+          </TouchableOpacity>
+        </View>
+      )}
       <TouchableOpacity onPress={pickImage}>
         <Image
           source={icons.addImage}

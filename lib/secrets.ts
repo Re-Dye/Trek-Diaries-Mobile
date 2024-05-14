@@ -38,18 +38,8 @@ export const getUpstashToken = (): string => {
   return secret;
 };
 
-export const getBaseUrl = (): string => {
-  const secret = process.env.NEXT_PUBLIC_BASE_URL;
-
-  if (!secret || secret.length === 0) {
-    throw new Error("The environment variable BASE_URL is not set.");
-  }
-
-  return secret;
-};
-
 export const getAlgoliaAppId = (): string => {
-  const secret = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
+  const secret = process.env.EXPO_PUBLIC_ALGOLIA_APP_ID;
 
   if (!secret || secret.length === 0) {
     throw new Error(
@@ -73,7 +63,7 @@ export const getAlgoliaAdminKey = (): string => {
 };
 
 export const getAlgoliaApiKey = (): string => {
-  const secret = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY;
+  const secret = process.env.EXPO_PUBLIC_ALGOLIA_API_KEY;
 
   if (!secret || secret.length === 0) {
     throw new Error(
@@ -85,7 +75,7 @@ export const getAlgoliaApiKey = (): string => {
 };
 
 export const getAlgoliaIndexName = (): string => {
-  const secret = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME;
+  const secret = process.env.EXPO_PUBLIC_ALGOLIA_INDEX_NAME;
 
   if (!secret || secret.length === 0) {
     throw new Error(
@@ -97,7 +87,7 @@ export const getAlgoliaIndexName = (): string => {
 };
 
 export const getCloudinaryName = (): string => {
-  const secret = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const secret = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
   if (!secret || secret.length === 0) {
     throw new Error(
@@ -109,7 +99,7 @@ export const getCloudinaryName = (): string => {
 };
 
 export const getCloudinaryApiKey = (): string => {
-  const secret = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
+  const secret = process.env.EXPO_PUBLIC_CLOUDINARY_API_KEY;
 
   if (!secret || secret.length === 0) {
     throw new Error(
@@ -133,7 +123,7 @@ export const getCloudinaryApiSecret = (): string => {
 };
 
 export const getCloudinaryFolderName = (): string => {
-  const secret = process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER_NAME;
+  const secret = process.env.EXPO_PUBLIC_CLOUDINARY_FOLDER_NAME;
 
   if (!secret || secret.length === 0) {
     throw new Error(

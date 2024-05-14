@@ -27,7 +27,7 @@ export default function SignIn() {
     } catch (error) {
       console.log(error);
     }
-    router.push("/home")
+    // router.push("/home")
   }
 
   return (
