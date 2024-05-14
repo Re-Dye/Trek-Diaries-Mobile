@@ -31,8 +31,10 @@ export default function SignIn() {
         const session: Session = sessionSchema.parse(data);
         setSession(session);
         router.push("/home");
+      } else if (status === 400) {
+        alert("Invalid credentials");
       } else {
-        console.log("Invalid credentials");
+        alert("Server Error occured. Please try again later.")
       }
     },
     onError: (error) => {
