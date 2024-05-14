@@ -3,10 +3,7 @@ import { compare } from "bcryptjs";
 import { findUser } from "../../../lib/db/actions";
 import { sign } from "jsonwebtoken";
 import { getAuthSecret } from "../../../lib/secrets";
-
-export async function GET() {
-  return new Response("Hello from the API!");
-}
+import { Session, SessionPayload, sessionSchema } from "../../../lib/zodSchema/session";
 
 export async function POST(req: Request) {
   try {
@@ -16,33 +13,42 @@ export async function POST(req: Request) {
     const result = await findUser(email);
 
     if (!result) {
-      //if the email is unregistered...
-      return new Response("Invalid credentials", { status: 400 });
+      return Response.json("Invalid credentials", { status: 400 });
     }
 
-    const isMatch = await compare(password, result.password);
+    try {
+      const isMatch = await compare(password, result.password);
 
-    if (!isMatch) {
-      // if password is incorrect
-      return new Response("Invalid credentials", { status: 400 });
+      if (!isMatch) {
+        return Response.json("Invalid credentials", { status: 400 });
+      }
+    } catch (error) {
+      console.error(error);
+      return Response.json("Invalid credentials", { status: 400 });
     }
 
-    const session = sign(
-      {
-        id: result.id,
-        name: result.name,
-        email: result.email,
-        dob: result.dob,
-        picture: result.image,
-        iat: Date.now(),
-      },
+    const payload: SessionPayload = {
+      id: result.id,
+      name: result.name,
+      email: result.email,
+      dob: result.dob,
+      picture: result.image ?? undefined,
+      iat: Date.now()
+    };
+
+    const token = sign(
+      payload,
       getAuthSecret(),
       { algorithm: "HS256", expiresIn: 30 * 24 * 60 * 60 * 1000 }
     );
+    
+    const res: Session = sessionSchema.parse({ token, ...payload });
 
-    return new Response(JSON.stringify({ session }), { status: 200 });
-  } catch {
-    console.error(Error);
-    return new Response("Invalid credentials", { status: 400 });
+    return Response.json(res, {
+      status: 200,
+    });
+  } catch(error) {
+    console.error(error);
+    return Response.json("Server Error", { status: 500 });
   }
 }
