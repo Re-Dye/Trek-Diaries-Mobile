@@ -1,12 +1,12 @@
 import { View, Text, ScrollView, Image } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { images } from "../../constants";
-import Forms from "../../components/Forms";
-import CustomButton from "../../components/CustomButton";
+import { images } from "@/constants";
+import Forms from "@/components/Forms";
+import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
-import { useSessionStore } from "../../lib/zustand/session";
-import { Session, sessionSchema } from "../../lib/zodSchema/session";
+import { useSessionStore } from "@/lib/zustand/session";
+import { Session, sessionSchema } from "@/lib/zodSchema/session";
 import { useMutation } from "@tanstack/react-query";
 
 export default function SignIn() {

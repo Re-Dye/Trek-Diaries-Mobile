@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { sessionPayloadSchema } from "./session";
 
 export const loginSchema = z.object({
   email: z.string().email(),

@@ -1,9 +1,9 @@
-import { loginSchema } from "../../../lib/zodSchema/login";
+import { loginSchema } from "@/lib/zodSchema/login";
 import { compare } from "bcryptjs";
-import { findUser } from "../../../lib/db/actions";
+import { findUser } from "@/lib/db/actions";
 import { sign } from "jsonwebtoken";
-import { getAuthSecret } from "../../../lib/secrets";
-import { Session, SessionPayload, sessionSchema } from "../../../lib/zodSchema/session";
+import { getAuthSecret } from "@/lib/secrets";
+import { Session, SessionPayload, sessionSchema } from "@/lib/zodSchema/session";
 
 export async function POST(req: Request) {
   try {
