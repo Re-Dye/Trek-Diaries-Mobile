@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const sessionSchema = z.object({
   token: z.string(),
@@ -7,7 +7,7 @@ export const sessionSchema = z.object({
   email: z.string(),
   dob: z.string(),
   picture: z.string().optional(),
-  iat: z.number()
+  iat: z.number(),
 });
 
 export const sessionPayloadSchema = sessionSchema.omit({ token: true });

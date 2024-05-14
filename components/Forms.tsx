@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import { icons } from "../constants";
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import { icons } from '../constants';
 
 export default function Forms({
   keyboardType,
@@ -15,7 +15,7 @@ export default function Forms({
   placeholder: string;
   handleChangeText: (e: string) => void;
   otherStyles?: string;
-  keyboardType?: "email-address" | "default";
+  keyboardType?: 'email-address' | 'default';
 }) {
   const [showPassword, setShowPassword] = useState(false);
   return (
@@ -28,9 +28,9 @@ export default function Forms({
           placeholder={placeholder}
           placeholderTextColor="#7b7b8b"
           onChangeText={handleChangeText}
-          secureTextEntry={title === "Password" && !showPassword}
+          secureTextEntry={title === 'Password' && !showPassword}
         />
-        {title === "Password" && (
+        {title === 'Password' && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Image
               source={!showPassword ? icons.eye : icons.eyeHide}

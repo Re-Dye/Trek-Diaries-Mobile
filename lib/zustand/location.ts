@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import type { ReturnFollowedLocation } from "../zodSchema/dbTypes";
+import { create } from 'zustand';
+import type { ReturnFollowedLocation } from '../zodSchema/dbTypes';
 
 interface LocationState {
   locations: Array<ReturnFollowedLocation> | [];

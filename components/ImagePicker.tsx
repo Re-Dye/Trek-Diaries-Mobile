@@ -1,7 +1,7 @@
-import { Image, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
-import * as ImagePicker from "expo-image-picker";
-import { icons } from "../constants";
+import { Image, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import * as ImagePicker from 'expo-image-picker';
+import { icons } from '../constants';
 
 export default function ImagePick() {
   const [image, setImage] = useState<string | null>(null);
@@ -35,10 +35,7 @@ export default function ImagePick() {
             className="w-full h-[250px] rounded-xl"
             resizeMode="cover"
           />
-          <TouchableOpacity
-            onPress={removeImage}
-            className="absolute top-2 right-2 rounded-3xl"
-          >
+          <TouchableOpacity onPress={removeImage} className="absolute top-2 right-2 rounded-3xl">
             <Image
               source={icons.closeImage}
               resizeMode="contain"

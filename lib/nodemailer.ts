@@ -1,5 +1,5 @@
-import { url } from "inspector";
-import nodemailer, { TransportOptions } from "nodemailer";
+import { url } from 'inspector';
+import nodemailer, { TransportOptions } from 'nodemailer';
 
 const sendEmail = async ({
   email,
@@ -85,15 +85,15 @@ const sendEmail = async ({
       from: process.env.USER,
       to: email,
       subject: subject,
-      text: "Please Verify your Email!!!" + link,
+      text: 'Please Verify your Email!!!' + link,
       html: emailContent,
     });
     if (success) {
-      console.log("Email has been sent successfully");
+      console.log('Email has been sent successfully');
     }
   } catch (error) {
     console.log(error);
-    throw new Error("Error in sending email");
+    throw new Error('Error in sending email');
   }
 };
 

@@ -1,13 +1,9 @@
-import { loginSchema } from "@/lib/zodSchema/login";
-import { compare } from "bcryptjs";
-import { findUser } from "@/lib/db/actions";
-import { sign } from "jsonwebtoken";
-import { getAuthSecret } from "@/lib/secrets";
-import {
-  Session,
-  SessionPayload,
-  sessionSchema,
-} from "@/lib/zodSchema/session";
+import { loginSchema } from '@/lib/zodSchema/login';
+import { compare } from 'bcryptjs';
+import { findUser } from '@/lib/db/actions';
+import { sign } from 'jsonwebtoken';
+import { getAuthSecret } from '@/lib/secrets';
+import { Session, SessionPayload, sessionSchema } from '@/lib/zodSchema/session';
 
 export async function POST(req: Request) {
   try {
@@ -17,13 +13,13 @@ export async function POST(req: Request) {
     const result = await findUser(email);
 
     if (!result) {
-      return Response.json("Invalid credentials", { status: 400 });
+      return Response.json('Invalid credentials', { status: 400 });
     }
 
     const isMatch = await compare(password, result.password);
 
     if (!isMatch) {
-      return Response.json("Invalid credentials", { status: 400 });
+      return Response.json('Invalid credentials', { status: 400 });
     }
 
     const payload: SessionPayload = {
@@ -36,7 +32,7 @@ export async function POST(req: Request) {
     };
 
     const token = sign(payload, getAuthSecret(), {
-      algorithm: "HS256",
+      algorithm: 'HS256',
       expiresIn: 30 * 24 * 60 * 60 * 1000,
     });
 
@@ -47,6 +43,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error(error);
-    return Response.json("Server Error", { status: 500 });
+    return Response.json('Server Error', { status: 500 });
   }
 }

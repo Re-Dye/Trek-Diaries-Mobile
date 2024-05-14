@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from './db';
 import {
   users,
   locations,
@@ -7,10 +7,10 @@ import {
   usersLikePosts,
   comments,
   preferences,
-} from "./schema";
-import { eq, sql, and, desc, asc, gt } from "drizzle-orm";
-import { redis } from "./upstash";
-import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
+} from './schema';
+import { eq, sql, and, desc, asc, gt } from 'drizzle-orm';
+import { redis } from './upstash';
+import { cacheUserSchema, CachedUser } from '../zodSchema/cachedUser';
 import {
   InsertLocation,
   UsersToLocations,
@@ -25,24 +25,24 @@ import {
   insertCommentSchema,
   InsertPreference,
   ReturnPreference,
-} from "../zodSchema/dbTypes";
-import { LikePost } from "../zodSchema/likePost";
-import { Pool } from "@neondatabase/serverless";
-import { getDbUrl } from "../secrets";
-import { drizzle } from "drizzle-orm/neon-serverless";
+} from '../zodSchema/dbTypes';
+import { LikePost } from '../zodSchema/likePost';
+import { Pool } from '@neondatabase/serverless';
+import { getDbUrl } from '../secrets';
+import { drizzle } from 'drizzle-orm/neon-serverless';
 
 export const countUserByEmail = async (email: string) => {
   try {
     const countUser = db
       .select({ count: sql<number>`count(*)` })
       .from(users)
-      .where(eq(users.email, sql.placeholder("email")))
-      .prepare("count_users");
+      .where(eq(users.email, sql.placeholder('email')))
+      .prepare('count_users');
     const result = await countUser.execute({ email });
     return result[0].count;
   } catch (error) {
-    console.error("Error in counting users: ", error);
-    throw new Error("Error in counting users: " + error);
+    console.error('Error in counting users: ', error);
+    throw new Error('Error in counting users: ' + error);
   }
 };
 
@@ -51,13 +51,13 @@ export const countUserById = async (id: string) => {
     const countUser = db
       .select({ count: sql<number>`count(*)` })
       .from(users)
-      .where(eq(users.id, sql.placeholder("id")))
-      .prepare("count_users");
+      .where(eq(users.id, sql.placeholder('id')))
+      .prepare('count_users');
     const result = await countUser.execute({ id });
     return result[0].count;
   } catch (error) {
-    console.error("Error in counting users: ", error);
-    throw new Error("Error in counting users: " + error);
+    console.error('Error in counting users: ', error);
+    throw new Error('Error in counting users: ' + error);
   }
 };
 
@@ -76,15 +76,13 @@ export const cacheUser = async ({
   dob: string;
   token: string;
 }) => {
-  const res = await redis.set(
-    token,
-    JSON.stringify({ email, password, name, dob, uuid }),
-    { ex: 3600 }
-  );
+  const res = await redis.set(token, JSON.stringify({ email, password, name, dob, uuid }), {
+    ex: 3600,
+  });
 
-  if (res !== "OK") {
-    console.error("Error in setting redis");
-    throw new Error("Error in setting redis");
+  if (res !== 'OK') {
+    console.error('Error in setting redis');
+    throw new Error('Error in setting redis');
   }
 };
 
@@ -93,8 +91,8 @@ export const findCachedUser = async (token: string) => {
     const user: CachedUser = cacheUserSchema.parse(await redis.get(token));
     return user;
   } catch (error) {
-    console.error("Error in finding cached user: ", error);
-    throw new Error("Error in finding cached user: " + error);
+    console.error('Error in finding cached user: ', error);
+    throw new Error('Error in finding cached user: ' + error);
   }
 };
 
@@ -102,12 +100,12 @@ export const deleteCachedUser = async (token: string) => {
   try {
     const res = await redis.del(token);
     if (res !== 1) {
-      console.error("Error in deleting cache");
-      throw new Error("Error in deleting cache");
+      console.error('Error in deleting cache');
+      throw new Error('Error in deleting cache');
     }
   } catch (error) {
-    console.error("Error in deleting cache: ", error);
-    throw new Error("Error in deleting cache: " + error);
+    console.error('Error in deleting cache: ', error);
+    throw new Error('Error in deleting cache: ' + error);
   }
 };
 
@@ -117,17 +115,17 @@ export const insertUser = async (user: CachedUser) => {
     const insertUser = db
       .insert(users)
       .values({
-        id: sql.placeholder("id"),
-        name: sql.placeholder("name"),
-        email: sql.placeholder("email"),
-        password: sql.placeholder("password"),
-        dob: sql.placeholder("dob"),
+        id: sql.placeholder('id'),
+        name: sql.placeholder('name'),
+        email: sql.placeholder('email'),
+        password: sql.placeholder('password'),
+        dob: sql.placeholder('dob'),
       })
-      .prepare("insert_user");
+      .prepare('insert_user');
     await insertUser.execute({ id: uuid, name, email, password, dob });
   } catch (error) {
-    console.error("Error in inserting user: ", error);
-    throw new Error("Error in inserting user: " + error);
+    console.error('Error in inserting user: ', error);
+    throw new Error('Error in inserting user: ' + error);
   }
 };
 
@@ -136,13 +134,13 @@ export const findUser = async (email: string): Promise<ReturnUser> => {
     const findUser = db
       .select()
       .from(users)
-      .where(eq(users.email, sql.placeholder("email")))
-      .prepare("find_user");
+      .where(eq(users.email, sql.placeholder('email')))
+      .prepare('find_user');
     const result = await findUser.execute({ email });
     return result[0];
   } catch (error) {
-    console.error("Error in finding user: ", error);
-    throw new Error("Error in finding user: " + error);
+    console.error('Error in finding user: ', error);
+    throw new Error('Error in finding user: ' + error);
   }
 };
 
@@ -151,29 +149,27 @@ export const countLocationByAddress = async (address: string) => {
     const countLocation = db
       .select({ count: sql<number>`count(*)` })
       .from(locations)
-      .where(eq(locations.address, sql.placeholder("address")))
-      .prepare("count_location");
+      .where(eq(locations.address, sql.placeholder('address')))
+      .prepare('count_location');
     const result = await countLocation.execute({ address });
     return result[0].count;
   } catch (error) {
-    console.error("Error in counting locations: ", error);
-    throw new Error("Error in counting locations: " + error);
+    console.error('Error in counting locations: ', error);
+    throw new Error('Error in counting locations: ' + error);
   }
 };
 
-export const addComment = async (
-  comment: InsertComment
-) => {
+export const addComment = async (comment: InsertComment) => {
   try {
     const addComment = db
       .insert(comments)
       .values({
-        user_id: sql.placeholder("user_id"),
-        content: sql.placeholder("content"),
-        post_id: sql.placeholder("post_id"),
+        user_id: sql.placeholder('user_id'),
+        content: sql.placeholder('content'),
+        post_id: sql.placeholder('post_id'),
       })
       .returning()
-      .prepare("add_location");
+      .prepare('add_location');
     const res = await addComment.execute({
       post_id: comment.post_id,
       content: comment.content,
@@ -181,8 +177,8 @@ export const addComment = async (
     });
     return res[0];
   } catch (error) {
-    console.error("Error in adding comment: ", error);
-    throw new Error("Error in adding comment: " + error);
+    console.error('Error in adding comment: ', error);
+    throw new Error('Error in adding comment: ' + error);
   }
 };
 
@@ -204,14 +200,14 @@ export const getComments = async (
       .from(comments)
       .where(
         and(
-          eq(comments.post_id, sql.placeholder("postId")),
-          gt(comments.id, sql.placeholder("last"))
+          eq(comments.post_id, sql.placeholder('postId')),
+          gt(comments.id, sql.placeholder('last'))
         )
       )
       .orderBy(desc(comments.registered_time), asc(comments.id))
-      .limit(sql.placeholder("limit"))
+      .limit(sql.placeholder('limit'))
       .innerJoin(users, eq(comments.user_id, users.id))
-      .prepare("getComment");
+      .prepare('getComment');
 
     /* get one more post for next turn */
     const res = await getComments.execute({ postId, limit: limit + 1, last });
@@ -225,29 +221,27 @@ export const getComments = async (
       return { comments: res, next: undefined };
     }
   } catch (error) {
-    console.error("Error in getting posts", error);
-    throw new Error("Error in getting posts: " + error);
+    console.error('Error in getting posts', error);
+    throw new Error('Error in getting posts: ' + error);
   }
 };
 
-export const addLocation = async (
-  location: InsertLocation
-): Promise<ReturnLocation> => {
+export const addLocation = async (location: InsertLocation): Promise<ReturnLocation> => {
   try {
     const { address, description } = insertLocationSchema.parse(location);
     const addLocation = db
       .insert(locations)
       .values({
-        address: sql.placeholder("address"),
-        description: sql.placeholder("description"),
+        address: sql.placeholder('address'),
+        description: sql.placeholder('description'),
       })
       .returning()
-      .prepare("add_location");
+      .prepare('add_location');
     const res = await addLocation.execute({ address, description });
     return res[0];
   } catch (error) {
-    console.error("Error in adding location: ", error);
-    throw new Error("Error in adding location: " + error);
+    console.error('Error in adding location: ', error);
+    throw new Error('Error in adding location: ' + error);
   }
 };
 
@@ -256,13 +250,13 @@ export const getLocation = async (id: string): Promise<ReturnLocation> => {
     const getLocation = db
       .select()
       .from(locations)
-      .where(eq(locations.id, sql.placeholder("id")))
-      .prepare("get_location");
+      .where(eq(locations.id, sql.placeholder('id')))
+      .prepare('get_location');
     const res = await getLocation.execute({ id });
     return res[0];
   } catch (error) {
-    console.error("Error in getting location: ", error);
-    throw new Error("Error in getting location: " + error);
+    console.error('Error in getting location: ', error);
+    throw new Error('Error in getting location: ' + error);
   }
 };
 
@@ -275,11 +269,11 @@ export const checkFollowLocation = async (data: UsersToLocations) => {
       .from(usersToLocations)
       .where(
         and(
-          eq(usersToLocations.userId, sql.placeholder("userId")),
-          eq(usersToLocations.locationId, sql.placeholder("locationId"))
+          eq(usersToLocations.userId, sql.placeholder('userId')),
+          eq(usersToLocations.locationId, sql.placeholder('locationId'))
         )
       )
-      .prepare("check_follow_location");
+      .prepare('check_follow_location');
     const res = await checkFollowLocation.execute({ userId, locationId });
     const count: number = res[0].count;
     if (count > 0) {
@@ -291,7 +285,7 @@ export const checkFollowLocation = async (data: UsersToLocations) => {
     console.error(
       `Error in checking if user:${data.userId} has followed location:${data.locationId}: ${error}`
     );
-    throw new Error("Error in checking follow location: " + error);
+    throw new Error('Error in checking follow location: ' + error);
   }
 };
 
@@ -302,14 +296,14 @@ export const followLocation = async (data: UsersToLocations) => {
     const followLocation = db
       .insert(usersToLocations)
       .values({
-        userId: sql.placeholder("userId"),
-        locationId: sql.placeholder("locationId"),
+        userId: sql.placeholder('userId'),
+        locationId: sql.placeholder('locationId'),
       })
-      .prepare("follow_location");
+      .prepare('follow_location');
     await followLocation.execute({ userId, locationId });
   } catch (error) {
-    console.error("Error in following location", error);
-    throw new Error("Error in following location: " + error);
+    console.error('Error in following location', error);
+    throw new Error('Error in following location: ' + error);
   }
 };
 
@@ -324,14 +318,14 @@ export const getFollowedLocations = async (
         address: locations.address,
       })
       .from(usersToLocations)
-      .where(eq(usersToLocations.userId, sql.placeholder("userId")))
+      .where(eq(usersToLocations.userId, sql.placeholder('userId')))
       .innerJoin(locations, eq(usersToLocations.locationId, locations.id))
-      .prepare("get_followed_locations");
+      .prepare('get_followed_locations');
 
     const res2 = await getFollowedLocations.execute({ userId });
     return res2;
   } catch (error) {
-    console.error("Error in getting followed locations: ", error);
+    console.error('Error in getting followed locations: ', error);
     throw new Error(`Error in getting followed locations: ${error}`);
   }
 };
@@ -344,15 +338,15 @@ export const unfollowLocation = async (data: UsersToLocations) => {
       .delete(usersToLocations)
       .where(
         and(
-          eq(usersToLocations.userId, sql.placeholder("userId")),
-          eq(usersToLocations.locationId, sql.placeholder("locationId"))
+          eq(usersToLocations.userId, sql.placeholder('userId')),
+          eq(usersToLocations.locationId, sql.placeholder('locationId'))
         )
       )
-      .prepare("unfollow_location");
+      .prepare('unfollow_location');
     await unfollowLocation.execute({ userId, locationId });
   } catch (error) {
-    console.error("Error in unfollowing location", error);
-    throw new Error("Error in unfollowing location: " + error);
+    console.error('Error in unfollowing location', error);
+    throw new Error('Error in unfollowing location: ' + error);
   }
 };
 
@@ -370,15 +364,15 @@ export const addPost = async (data: InsertPost) => {
     const addPost = db
       .insert(posts)
       .values({
-        accessibility: sql.placeholder("accessibility"),
-        description: sql.placeholder("description"),
-        picture_url: sql.placeholder("picture_url"),
-        trail_condition: sql.placeholder("trail_condition"),
-        weather: sql.placeholder("weather"),
-        location_id: sql.placeholder("location_id"),
-        owner_id: sql.placeholder("owner_id"),
+        accessibility: sql.placeholder('accessibility'),
+        description: sql.placeholder('description'),
+        picture_url: sql.placeholder('picture_url'),
+        trail_condition: sql.placeholder('trail_condition'),
+        weather: sql.placeholder('weather'),
+        location_id: sql.placeholder('location_id'),
+        owner_id: sql.placeholder('owner_id'),
       })
-      .prepare("add_post");
+      .prepare('add_post');
     await addPost.execute({
       accessibility,
       description,
@@ -389,8 +383,8 @@ export const addPost = async (data: InsertPost) => {
       owner_id,
     });
   } catch (error) {
-    console.error("Error in adding post", error);
-    throw new Error("Error in adding post: " + error);
+    console.error('Error in adding post', error);
+    throw new Error('Error in adding post: ' + error);
   }
 };
 
@@ -413,15 +407,15 @@ export const getPost = async (postId: string): Promise<ReturnPost> => {
         owner_name: users.name,
       })
       .from(posts)
-      .where(eq(posts.id, sql.placeholder("postId")))
+      .where(eq(posts.id, sql.placeholder('postId')))
       .innerJoin(locations, eq(posts.location_id, locations.id))
       .innerJoin(users, eq(posts.owner_id, users.id))
-      .prepare("get_post");
+      .prepare('get_post');
     const res = await getPost.execute({ postId });
     return res[0];
   } catch (error) {
-    console.error("Error in getting post", error);
-    throw new Error("Error in getting post: " + error);
+    console.error('Error in getting post', error);
+    throw new Error('Error in getting post: ' + error);
   }
 };
 
@@ -450,15 +444,15 @@ export const getPosts = async (
       .from(posts)
       .where(
         and(
-          eq(posts.location_id, sql.placeholder("locationId")),
-          gt(posts.id, sql.placeholder("last"))
+          eq(posts.location_id, sql.placeholder('locationId')),
+          gt(posts.id, sql.placeholder('last'))
         )
       )
       .orderBy(desc(posts.registered_time), asc(posts.id))
-      .limit(sql.placeholder("limit"))
+      .limit(sql.placeholder('limit'))
       .innerJoin(locations, eq(posts.location_id, locations.id))
       .innerJoin(users, eq(posts.owner_id, users.id))
-      .prepare("get_posts");
+      .prepare('get_posts');
 
     /* get one more post for next turn */
     const res = await getPosts.execute({ locationId, limit: limit + 1, last });
@@ -472,8 +466,8 @@ export const getPosts = async (
       return { posts: res, next: undefined };
     }
   } catch (error) {
-    console.error("Error in getting posts", error);
-    throw new Error("Error in getting posts: " + error);
+    console.error('Error in getting posts', error);
+    throw new Error('Error in getting posts: ' + error);
   }
 };
 
@@ -497,9 +491,9 @@ export const getFeed = async (
         owner_id: posts.owner_id,
       })
       .from(usersToLocations)
-      .where(eq(usersToLocations.userId, sql.placeholder("userId")))
+      .where(eq(usersToLocations.userId, sql.placeholder('userId')))
       .innerJoin(posts, eq(usersToLocations.locationId, posts.location_id))
-      .as("sq");
+      .as('sq');
     const getFeed = db
       .select({
         id: sq.id,
@@ -517,12 +511,12 @@ export const getFeed = async (
         owner_name: users.name,
       })
       .from(sq)
-      .where(gt(sq.id, sql.placeholder("last")))
+      .where(gt(sq.id, sql.placeholder('last')))
       .orderBy(desc(sq.registered_time), asc(sq.id))
-      .limit(sql.placeholder("limit"))
+      .limit(sql.placeholder('limit'))
       .innerJoin(locations, eq(sq.location_id, locations.id))
       .innerJoin(users, eq(sq.owner_id, users.id))
-      .prepare("get_feed");
+      .prepare('get_feed');
 
     /* get one more post for next turn */
     const res = await getFeed.execute({ userId, limit: limit + 1, last });
@@ -536,8 +530,8 @@ export const getFeed = async (
       return { posts: res, next: undefined };
     }
   } catch (error) {
-    console.error("Error in getting feed", error);
-    throw new Error("Error in getting feed: " + error);
+    console.error('Error in getting feed', error);
+    throw new Error('Error in getting feed: ' + error);
   }
 };
 
@@ -546,8 +540,8 @@ export const postExists = async (postId: string) => {
     const postExists = db
       .select({ count: sql<number>`count(*)` })
       .from(posts)
-      .where(eq(posts.id, sql.placeholder("postId")))
-      .prepare("post_exists");
+      .where(eq(posts.id, sql.placeholder('postId')))
+      .prepare('post_exists');
     const res = await postExists.execute({ postId });
     const count: number = res[0].count;
     if (count > 0) {
@@ -556,8 +550,8 @@ export const postExists = async (postId: string) => {
       return false;
     }
   } catch (error) {
-    console.error("Error in checking if post exists", error);
-    throw new Error("Error in checking if post exists: " + error);
+    console.error('Error in checking if post exists', error);
+    throw new Error('Error in checking if post exists: ' + error);
   }
 };
 
@@ -568,11 +562,11 @@ export const isPostLiked = async (data: LikePost): Promise<boolean> => {
       .from(usersLikePosts)
       .where(
         and(
-          eq(usersLikePosts.user_id, sql.placeholder("userId")),
-          eq(usersLikePosts.post_id, sql.placeholder("postId"))
+          eq(usersLikePosts.user_id, sql.placeholder('userId')),
+          eq(usersLikePosts.post_id, sql.placeholder('postId'))
         )
       )
-      .prepare("is_post_liked");
+      .prepare('is_post_liked');
     const res = await isPostLiked.execute({
       userId: data.userId,
       postId: data.postId,
@@ -584,8 +578,8 @@ export const isPostLiked = async (data: LikePost): Promise<boolean> => {
       return false;
     }
   } catch (error) {
-    console.error("Error in checking if post is liked", error);
-    throw new Error("Error in checking if post is liked: " + error);
+    console.error('Error in checking if post is liked', error);
+    throw new Error('Error in checking if post is liked: ' + error);
   }
 };
 
@@ -615,9 +609,9 @@ export const likePost = async (data: LikePost): Promise<number> => {
     pool.end();
     return likes;
   } catch (error) {
-    console.error("Error in liking post", error);
+    console.error('Error in liking post', error);
     pool.end();
-    throw new Error("Error in liking post: " + error);
+    throw new Error('Error in liking post: ' + error);
   }
 };
 
@@ -629,10 +623,7 @@ export const dislikePost = async (data: LikePost) => {
       await trx
         .delete(usersLikePosts)
         .where(
-          and(
-            eq(usersLikePosts.user_id, data.userId),
-            eq(usersLikePosts.post_id, data.postId)
-          )
+          and(eq(usersLikePosts.user_id, data.userId), eq(usersLikePosts.post_id, data.postId))
         )
         .execute();
       const res: { likes: number }[] = await trx
@@ -649,9 +640,9 @@ export const dislikePost = async (data: LikePost) => {
     pool.end();
     return likes;
   } catch (error) {
-    console.error("Error in liking post", error);
+    console.error('Error in liking post', error);
     pool.end();
-    throw new Error("Error in liking post: " + error);
+    throw new Error('Error in liking post: ' + error);
   }
 };
 
@@ -660,15 +651,15 @@ export const addPreference = async (data: InsertPreference) => {
     const addPreference = db
       .insert(preferences)
       .values({
-        user_id: sql.placeholder("user_id"),
-        altitude: sql.placeholder("altitude"),
-        distance: sql.placeholder("distance"),
-        features: sql.placeholder("features"),
-        month: sql.placeholder("month"),
-        trail: sql.placeholder("trail"),
-        type: sql.placeholder("type"),
+        user_id: sql.placeholder('user_id'),
+        altitude: sql.placeholder('altitude'),
+        distance: sql.placeholder('distance'),
+        features: sql.placeholder('features'),
+        month: sql.placeholder('month'),
+        trail: sql.placeholder('trail'),
+        type: sql.placeholder('type'),
       })
-      .prepare("add_preference");
+      .prepare('add_preference');
     await addPreference.execute({
       user_id: data.user_id,
       altitude: data.altitude,
@@ -679,10 +670,10 @@ export const addPreference = async (data: InsertPreference) => {
       type: data.type,
     });
   } catch (error) {
-    console.error("Error in adding preference", error);
-    throw new Error("Error in adding preference: " + error);
+    console.error('Error in adding preference', error);
+    throw new Error('Error in adding preference: ' + error);
   }
-}
+};
 
 export const updatePreference = async (data: InsertPreference) => {
   try {
@@ -699,18 +690,18 @@ export const updatePreference = async (data: InsertPreference) => {
       .where(eq(preferences.user_id, data.user_id))
       .execute();
   } catch (error) {
-    console.error("Error in updating preference", error);
-    throw new Error("Error in updating preference: " + error);
+    console.error('Error in updating preference', error);
+    throw new Error('Error in updating preference: ' + error);
   }
-}
+};
 
 export const getPreference = async (userId: string): Promise<ReturnPreference | null> => {
   try {
     const getPreference = db
       .select()
       .from(preferences)
-      .where(eq(preferences.user_id, sql.placeholder("userId")))
-      .prepare("get_preference");
+      .where(eq(preferences.user_id, sql.placeholder('userId')))
+      .prepare('get_preference');
     const res = await getPreference.execute({ userId });
 
     if (res.length === 0) {
@@ -719,7 +710,7 @@ export const getPreference = async (userId: string): Promise<ReturnPreference | 
 
     return res[0];
   } catch (error) {
-    console.error("Error in getting preference", error);
-    throw new Error("Error in getting preference: " + error);
+    console.error('Error in getting preference', error);
+    throw new Error('Error in getting preference: ' + error);
   }
-}
+};

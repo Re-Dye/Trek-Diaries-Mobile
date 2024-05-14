@@ -2,7 +2,9 @@ const handleRegisteredTime = (time: string) => {
   const postDate = new Date(time);
   const now = new Date();
 
-  const diffInSeconds = Math.abs((now.getTime() - postDate.getTime() + (now.getTimezoneOffset() * 60000)) / 1000);
+  const diffInSeconds = Math.abs(
+    (now.getTime() - postDate.getTime() + now.getTimezoneOffset() * 60000) / 1000
+  );
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   const diffInHours = Math.floor(diffInMinutes / 60);
   const diffInDays = Math.floor(diffInHours / 24);

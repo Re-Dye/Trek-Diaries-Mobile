@@ -1,44 +1,44 @@
-import { View, Text, ScrollView, Image } from "react-native";
-import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { images } from "@/constants";
-import Forms from "@/components/Forms";
-import CustomButton from "@/components/CustomButton";
-import { Link, router } from "expo-router";
-import { useSessionStore } from "@/lib/zustand/session";
-import { Session, sessionSchema } from "@/lib/zodSchema/session";
-import { useMutation } from "@tanstack/react-query";
+import { View, Text, ScrollView, Image } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { images } from '@/constants';
+import Forms from '@/components/Forms';
+import CustomButton from '@/components/CustomButton';
+import { Link, router } from 'expo-router';
+import { useSessionStore } from '@/lib/zustand/session';
+import { Session, sessionSchema } from '@/lib/zodSchema/session';
+import { useMutation } from '@tanstack/react-query';
 
 export default function SignIn() {
   const [form, setForm] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       const res = await fetch(`/api/auth/signin`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: form.email, password: form.password }),
       });
 
-      return { status: res.status, data: await res.json()}
+      return { status: res.status, data: await res.json() };
     },
     onSuccess: ({ data, status }) => {
       if (status === 200) {
         const session: Session = sessionSchema.parse(data);
         setSession(session);
-        router.push("/home");
+        router.push('/home');
       } else if (status === 400) {
-        alert("Invalid credentials");
+        alert('Invalid credentials');
       } else {
-        alert("Server Error occured. Please try again later.")
+        alert('Server Error occured. Please try again later.');
       }
     },
     onError: (error) => {
-      console.log("Error", error);
+      console.log('Error', error);
     },
   });
 
@@ -48,14 +48,8 @@ export default function SignIn() {
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View className="w-full justify-center min-h-[85vh] px-5 my-6">
-          <Image
-            source={images.logo}
-            resizeMode="contain"
-            className="w-[200px] h-[50px]"
-          />
-          <Text className="text-2xl text-white font-psemibold mt-10">
-            Login to TrekDiaries
-          </Text>
+          <Image source={images.logo} resizeMode="contain" className="w-[200px] h-[50px]" />
+          <Text className="text-2xl text-white font-psemibold mt-10">Login to TrekDiaries</Text>
           <Forms
             title="Email"
             placeholder="ram@gmail.com"
@@ -78,13 +72,8 @@ export default function SignIn() {
             isLoading={isPending}
           />
           <View className="justify-center pt-5 flex-row gap-2">
-            <Text className="text-sm text-gray-100 font-pregular">
-              Don't have an account?
-            </Text>
-            <Link
-              href="/sign-up"
-              className="text-sm font-psemibold text-green-500"
-            >
+            <Text className="text-sm text-gray-100 font-pregular">Don't have an account?</Text>
+            <Link href="/sign-up" className="text-sm font-psemibold text-green-500">
               Sign Up
             </Link>
           </View>

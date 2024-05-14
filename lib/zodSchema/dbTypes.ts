@@ -1,15 +1,8 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import {
-  users,
-  locations,
-  posts,
-  usersToLocations,
-  comments,
-  preferences,
-} from "../db/schema";
-import { TypeOf, z } from "zod";
-import { Prettify } from "../prettify";
-import { type } from "os";
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { users, locations, posts, usersToLocations, comments, preferences } from '../db/schema';
+import { TypeOf, z } from 'zod';
+import { Prettify } from '../prettify';
+import { type } from 'os';
 
 export const selectUserSchema = createSelectSchema(users);
 export const insertUserSchema = createInsertSchema(users);
@@ -25,9 +18,7 @@ export const insertPostSchema = createInsertSchema(posts);
 
 export const usersToLocationsSchema = createInsertSchema(usersToLocations);
 export type UsersToLocations = z.infer<typeof usersToLocationsSchema>;
-export type ReturnFollowedLocation = Prettify<
-  UsersToLocations & { address: string }
->;
+export type ReturnFollowedLocation = Prettify<UsersToLocations & { address: string }>;
 
 export const postSchema = createInsertSchema(posts);
 export type InsertPost = z.infer<typeof postSchema>;

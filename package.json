@@ -7,6 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "format": "prettier . --write",
     "migrations:generate": "drizzle-kit generate:pg",
     "migrations:push": "tsx migrate.ts",
     "migrations:drop": "drizzle-kit drop --config=drizzle.config.ts"
@@ -47,6 +48,7 @@
     "@types/react": "^18.2.74",
     "@types/react-test-renderer": "^18.0.7",
     "drizzle-kit": "^0.21.1",
+    "prettier": "3.2.5",
     "tailwindcss": "^3.3.2",
     "ts-node": "^10.9.2",
     "typescript": "~5.3.3"

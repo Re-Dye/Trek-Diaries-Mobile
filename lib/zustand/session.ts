@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { Session } from "../zodSchema/session";
+import { create } from 'zustand';
+import { Session } from '../zodSchema/session';
 
 interface SessionState {
   session: Session | null;
