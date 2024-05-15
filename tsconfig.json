@@ -1,19 +1,10 @@
 {
-  "extends": [
-    "@tsconfig/react-native/tsconfig.json",
-    "expo/tsconfig.base"
-  ],
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "constants/icons.js"
-  ],
+  "extends": ["@tsconfig/react-native/tsconfig.json", "expo/tsconfig.base"],
+  "include": ["**/*.ts", "**/*.tsx", "constants/icons.js"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   }
 }
