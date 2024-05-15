@@ -32,13 +32,14 @@ export default function SignIn() {
         setSession(session);
         router.push('/home');
       } else if (status === 400) {
-        alert('Invalid credentials');
+        alert(data);
       } else {
         alert('Server Error occured. Please try again later.');
       }
     },
     onError: (error) => {
       console.log('Error', error);
+      alert('Some error occured. Please try again later.');
     },
   });
 

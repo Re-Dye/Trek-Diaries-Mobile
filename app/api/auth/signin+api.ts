@@ -7,13 +7,19 @@ import { Session, SessionPayload, sessionSchema } from '@/lib/zodSchema/session'
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = loginSchema.parse(await req.json()); // validating the credentials
+    let email: string, password: string;
+
+    try {
+      const { email, password } = loginSchema.parse(await req.json()); // validating the credentials
+    } catch (error) {
+      return Response.json('Bad request.', { status: 400 });
+    }
 
     /* check on database here */
     const result = await findUser(email);
 
     if (!result) {
-      return Response.json('Invalid credentials', { status: 400 });
+      return Response.json('Invalid credentials.', { status: 400 });
     }
 
     const isMatch = await compare(password, result.password);
