@@ -7,7 +7,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: '1.0.0',
   scheme: ['trekking app'],
   orientation: 'portrait',
-  icon: './assets/icon.png',
+  icon: './assets/iconic.png',
+  userInterfaceStyle: 'light',
   splash: {
     image: './assets/splash.png',
     resizeMode: 'contain',
