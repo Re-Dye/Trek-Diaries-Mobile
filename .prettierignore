@@ -1,0 +1,5 @@
+# Ignore artifacts:
+.expo/
+node_modules/
+dist/
+web-build/
