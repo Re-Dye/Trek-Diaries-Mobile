@@ -1,5 +1,4 @@
-import logo from '../assets/images/logo.png';
-import trekLogo from '../assets/images/trekLogo.png';
-import userLogo from '../assets/images/user.png';
+import logo from "../assets/images/logo.png";
+import trekLogo from "../assets/images/trekLogo.png";
 
-export default { logo, trekLogo, userLogo };
+export default {logo, trekLogo};
