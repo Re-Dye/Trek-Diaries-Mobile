@@ -10,22 +10,23 @@ export async function POST(req: Request) {
     let email: string, password: string;
 
     try {
-      const { email, password } = loginSchema.parse(await req.json()); // validating the credentials
+      const body = await req.json();
+      ({ email, password } = loginSchema.parse(body)); // Validate the credentials
     } catch (error) {
-      return Response.json('Bad request.', { status: 400 });
+      return new Response(JSON.stringify('Bad request.'), { status: 400 });
     }
 
-    /* check on database here */
+    // Check on database here
     const result = await findUser(email);
 
     if (!result) {
-      return Response.json('Invalid credentials.', { status: 400 });
+      return new Response(JSON.stringify('Invalid credentials.'), { status: 400 });
     }
 
     const isMatch = await compare(password, result.password);
 
     if (!isMatch) {
-      return Response.json('Invalid credentials', { status: 400 });
+      return new Response(JSON.stringify('Invalid credentials'), { status: 400 });
     }
 
     const payload: SessionPayload = {
@@ -34,21 +35,22 @@ export async function POST(req: Request) {
       email: result.email,
       dob: result.dob,
       picture: result.image ?? undefined,
-      iat: Date.now(),
+      iat: Math.floor(Date.now() / 1000), // iat should be in seconds
     };
 
     const token = sign(payload, getAuthSecret(), {
       algorithm: 'HS256',
-      expiresIn: 30 * 24 * 60 * 60 * 1000,
+      expiresIn: '30d', // Use a string to specify the time span
     });
 
     const res: Session = sessionSchema.parse({ token, ...payload });
 
-    return Response.json(res, {
+    return new Response(JSON.stringify(res), {
       status: 200,
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error(error);
-    return Response.json('Server Error', { status: 500 });
+    return new Response(JSON.stringify('Server Error'), { status: 500 });
   }
 }
