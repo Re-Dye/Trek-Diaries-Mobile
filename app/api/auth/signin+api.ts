@@ -10,7 +10,9 @@ export async function POST(req: Request) {
     let email: string, password: string;
 
     try {
-      const { email, password } = loginSchema.parse(await req.json()); // validating the credentials
+      const credentials = loginSchema.parse(await req.json()); // validating the credentials
+      email = credentials.email;
+      password = credentials.password;
     } catch (error) {
       return Response.json('Bad request.', { status: 400 });
     }
