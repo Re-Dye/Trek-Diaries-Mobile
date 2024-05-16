@@ -1,7 +1,7 @@
-import { View, Text, ScrollView } from 'react-native'
+import { View, Text, ScrollView } from 'react-native';
 import React from 'react';
 import FeedCard from '@/components/FeedCard';
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Home() {
   return (
