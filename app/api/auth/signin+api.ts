@@ -10,23 +10,24 @@ export async function POST(req: Request) {
     let email: string, password: string;
 
     try {
-      const body = await req.json();
-      ({ email, password } = loginSchema.parse(body)); // Validate the credentials
+      const credentials = loginSchema.parse(await req.json()); // validating the credentials
+      email = credentials.email;
+      password = credentials.password;
     } catch (error) {
-      return new Response(JSON.stringify('Bad request.'), { status: 400 });
+      return Response.json('Bad request.', { status: 400 });
     }
 
-    // Check on database here
+    /* check on database here */
     const result = await findUser(email);
 
     if (!result) {
-      return new Response(JSON.stringify('Invalid credentials.'), { status: 400 });
+      return Response.json('Invalid credentials.', { status: 400 });
     }
 
     const isMatch = await compare(password, result.password);
 
     if (!isMatch) {
-      return new Response(JSON.stringify('Invalid credentials'), { status: 400 });
+      return Response.json('Invalid credentials', { status: 400 });
     }
 
     const payload: SessionPayload = {
@@ -35,22 +36,21 @@ export async function POST(req: Request) {
       email: result.email,
       dob: result.dob,
       picture: result.image ?? undefined,
-      iat: Math.floor(Date.now() / 1000), // iat should be in seconds
+      iat: Date.now(),
     };
 
     const token = sign(payload, getAuthSecret(), {
       algorithm: 'HS256',
-      expiresIn: '30d', // Use a string to specify the time span
+      expiresIn: 30 * 24 * 60 * 60 * 1000,
     });
 
     const res: Session = sessionSchema.parse({ token, ...payload });
 
-    return new Response(JSON.stringify(res), {
+    return Response.json(res, {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify('Server Error'), { status: 500 });
+    return Response.json('Server Error', { status: 500 });
   }
 }
