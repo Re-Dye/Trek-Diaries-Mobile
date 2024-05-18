@@ -10,7 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   icon: './assets/iconic.png',
   userInterfaceStyle: 'light',
   splash: {
-    image: './assets/splash.png',
+    image: './assets/splashy_logo.png',
     resizeMode: 'contain',
     backgroundColor: '#ffffff',
   },
