@@ -2,6 +2,7 @@ import { View, Text, Image, ImageSourcePropType } from 'react-native';
 import React from 'react';
 import { Tabs, Redirect } from 'expo-router';
 import { icons } from '../../constants';
+import { useSessionStore } from '@/lib/zustand/session';
 
 const TabIcon = ({
   icon,
@@ -14,6 +15,12 @@ const TabIcon = ({
   name: string;
   focused: boolean;
 }) => {
+  const { session } = useSessionStore();
+
+  if (!session || new Date() >= new Date(session.ein + session.iat)) {
+    return <Redirect href={'/home'} />;
+  }
+
   return (
     <View className="flex items-center justify-center gap-2">
       <Image source={icon} resizeMode="contain" tintColor={color} className="w-6 h-6" />

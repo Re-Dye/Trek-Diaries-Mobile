@@ -29,6 +29,9 @@ export async function POST(req: Request) {
     if (!isMatch) {
       return Response.json('Invalid credentials', { status: 400 });
     }
+    
+    const iat = Date.now();
+    const ein = 30 * 24 * 60 * 60 * 1000;
 
     const payload: SessionPayload = {
       id: result.id,
@@ -36,12 +39,13 @@ export async function POST(req: Request) {
       email: result.email,
       dob: result.dob,
       picture: result.image ?? undefined,
-      iat: Date.now(),
+      iat,
+      ein,
     };
 
     const token = sign(payload, getAuthSecret(), {
       algorithm: 'HS256',
-      expiresIn: 30 * 24 * 60 * 60 * 1000,
+      expiresIn: ein,
     });
 
     const res: Session = sessionSchema.parse({ token, ...payload });

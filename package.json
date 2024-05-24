@@ -26,6 +26,7 @@
     "expo-image-picker": "~15.0.4",
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.12",
+    "expo-secure-store": "~13.0.1",
     "expo-status-bar": "~1.12.1",
     "jsonwebtoken": "^9.0.2",
     "nativewind": "^2.0.11",

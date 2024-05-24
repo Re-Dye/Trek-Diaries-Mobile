@@ -8,8 +8,10 @@ import { Link, router } from 'expo-router';
 import { useSessionStore } from '@/lib/zustand/session';
 import { Session, sessionSchema } from '@/lib/zodSchema/session';
 import { useMutation } from '@tanstack/react-query';
+import { setStorageItemAsync } from '@/lib/storage';
 
 export default function SignIn() {
+  const { setSession } = useSessionStore();
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -30,6 +32,7 @@ export default function SignIn() {
       if (status === 200) {
         const session: Session = sessionSchema.parse(data);
         setSession(session);
+        setStorageItemAsync('session', JSON.stringify(session));
         router.push('/home');
       } else if (status === 400) {
         alert(data);
@@ -42,8 +45,6 @@ export default function SignIn() {
       alert('Some error occured. Please try again later.');
     },
   });
-
-  const { setSession } = useSessionStore();
 
   return (
     <SafeAreaView className="bg-primary h-full">
