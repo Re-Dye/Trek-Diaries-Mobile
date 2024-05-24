@@ -5,19 +5,61 @@ import { images } from '../../constants';
 import Forms from '../../components/Forms';
 import CustomButton from '../../components/CustomButton';
 import { Link } from 'expo-router';
+import { useMutation } from '@tanstack/react-query';
+import { SignupData } from '@/lib/zodSchema/signup';
 
 export default function SignUp() {
   const [form, setForm] = useState({
-    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    DOB: '',
+    dob: new Date().toISOString(),
     password: '',
     confirmpassword: '',
   });
 
-  const [isSubmit, setIsSubmit] = useState(false);
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: SignupData) => {
+      const res = await fetch(`/api/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-  const submit = () => {};
+      return { status: res.status, data: await res.json() };
+    },
+    onSuccess: ({ data, status }) => {
+      if (status === 201) {
+        alert(
+          'The verification mail has been sent to your email. Please verify your email to login.'
+        );
+      } else if (status === 400) {
+        alert(data);
+      } else if (status === 409) {
+        alert('Email already exists. Please try with another email.');
+      } else {
+        alert('Server Error occured. Please try again later.');
+      }
+    },
+    onError: (error) => {
+      console.log('Error', error);
+      alert('Some error occured. Please try again later.');
+    },
+  });
+
+  const handleSignUp = async () => {
+    const res: SignupData = {
+      name: `${form.firstName} ${form.lastName}`,
+      email: form.email,
+      dob: form.dob,
+      password: form.password,
+    };
+    console.log(res);
+    mutate(res);
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -25,10 +67,17 @@ export default function SignUp() {
           <Image source={images.logo} resizeMode="contain" className="w-[200px] h-[50px]" />
           <Text className="text-2xl text-white font-psemibold mt-10">Sign Up to TrekDiaries</Text>
           <Forms
-            title="Username"
-            placeholder="set your username"
-            value={form.username}
-            handleChangeText={(e) => setForm({ ...form, username: e })}
+            title="First Name"
+            placeholder="First Name"
+            value={form.firstName}
+            handleChangeText={(e) => setForm({ ...form, firstName: e })}
+            otherStyles="mt-7"
+          />
+          <Forms
+            title="Last Name"
+            placeholder="Last Name"
+            value={form.lastName}
+            handleChangeText={(e) => setForm({ ...form, lastName: e })}
             otherStyles="mt-7"
           />
           <Forms
@@ -55,9 +104,9 @@ export default function SignUp() {
           />
           <CustomButton
             title="Sign Up"
-            handlePress={submit}
+            handlePress={handleSignUp}
             containerStyles="mt-7"
-            isLoading={isSubmit}
+            isLoading={isPending}
           />
           <View className="justify-center pt-5 flex-row gap-2">
             <Text className="text-sm text-gray-100 font-pregular">Already have an account?</Text>

@@ -1,5 +1,4 @@
 import { ExpoConfig, ConfigContext } from 'expo/config';
-import { getBaseUrl } from './lib/secrets';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -33,7 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-router',
       {
-        origin: getBaseUrl(),
+        origin: process.env.VERCEL_PROJECT_PRODUCTION_URL || 'http://localhost:8081',
       },
     ],
     [

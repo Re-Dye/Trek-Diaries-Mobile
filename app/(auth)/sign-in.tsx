@@ -14,7 +14,7 @@ export default function SignIn() {
     email: '',
     password: '',
   });
-  const { mutate, isPending } = useMutation({
+  const { mutate: signin, isPending } = useMutation({
     mutationFn: async () => {
       const res = await fetch(`/api/auth/signin`, {
         method: 'POST',
@@ -68,7 +68,7 @@ export default function SignIn() {
           />
           <CustomButton
             title="Sign In"
-            handlePress={mutate}
+            handlePress={signin}
             containerStyles="mt-7"
             isLoading={isPending}
           />
