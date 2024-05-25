@@ -14,6 +14,8 @@ export async function POST(req: Request) {
       email = credentials.email;
       password = credentials.password;
     } catch (error) {
+      
+      console.log(error)
       return Response.json('Bad request.', { status: 400 });
     }
 
@@ -21,12 +23,14 @@ export async function POST(req: Request) {
     const result = await findUser(email);
 
     if (!result) {
+      console.log("2")
       return Response.json('Invalid credentials.', { status: 400 });
     }
 
     const isMatch = await compare(password, result.password);
 
     if (!isMatch) {
+      console.log("3")
       return Response.json('Invalid credentials', { status: 400 });
     }
     
@@ -49,7 +53,6 @@ export async function POST(req: Request) {
     });
 
     const res: Session = sessionSchema.parse({ token, ...payload });
-
     return Response.json(res, {
       status: 200,
     });
