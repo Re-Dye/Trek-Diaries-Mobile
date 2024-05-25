@@ -8,7 +8,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { CONSTANTS } from '@/lib/constants';
 import { ReturnPost } from '@/lib/zodSchema/dbTypes';
 import Toast from 'react-native-toast-message';
-// import { useInView } from 'react-native-intersection-observer';
+import { InView } from 'react-native-intersection-observer';
 
 interface Response {
   posts: Array<ReturnPost>;
@@ -16,60 +16,45 @@ interface Response {
 }
 
 export default function PostFeed({ userId }: { userId: string }) {
-  const { ref, inView } = useInView();
-  const { data, status, fetchNextPage } = useInfiniteQuery({
-    queryKey: ['posts', 'feed'],
-    queryFn: async ({ pageParam }: { pageParam: string }) => {
-      try {
-        const res = await fetch(
-          `/api/feed?userId=${userId}&last=${pageParam}&limit=${CONSTANTS.POSTS_PER_SCROLL}`,
-          {
-            cache: 'no-store',
-            method: 'GET',
-          }
-        );
-        const status = res.status;
-        if (status === 200) {
-          const data: Response = await res.json();
-          return data;
-        } else if (status === 400) {
-          Toast.show({
-            type: 'error',
-            text1: 'Invalid Request',
-            text2: 'Please try again with valid parameters',
-          });
-          return;
-        } else {
-          Toast.show({
-            type: 'error',
-            text1: 'Something went wrong',
-            text2: 'Please try again later',
-          });
-          return;
+  const { data, status, fetchNextPage, hasNextPage } = useInfiniteQuery<Response, Error>({
+    queryKey: ['posts', 'feed', userId],
+    queryFn: async ({ pageParam = '00000000-0000-0000-0000-000000000000' }) => {
+      const res = await fetch(
+        `/api/feed?userId=${userId}&last=${pageParam}&limit=${CONSTANTS.POSTS_PER_SCROLL}`,
+        {
+          cache: 'no-store',
+          method: 'GET',
         }
-      } catch (error) {
-        console.error(error);
-        Alert.alert('Error', error.message);
-        return;
-      }
-    },
-    getNextPageParam: (lastPage) => {
-      if (lastPage === undefined) {
-        return null;
+      );
+      if (res.status === 200) {
+        return res.json();
+      } else if (res.status === 400) {
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid Request',
+          text2: 'Please try again with valid parameters',
+        });
+        throw new Error('Invalid Request');
       } else {
-        return lastPage.next;
+        Toast.show({
+          type: 'error',
+          text1: 'Something went wrong',
+          text2: 'Please try again later',
+        });
+        throw new Error('Something went wrong');
       }
     },
-    initialPageParam: '00000000-0000-0000-0000-000000000000',
+    getNextPageParam: (lastPage) => lastPage?.next ?? null,
+    initialPageParam: '00000000-0000-0000-0000-000000000000', // Add this line
   });
 
   useEffect(() => {
-    if (inView) {
+    if (InView) {
       fetchNextPage();
     }
-  }, [inView]);
+  }, [InView]);
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: ReturnPost }) => (
     <FeedCard
       userId={userId}
       id={item.id}
@@ -90,9 +75,15 @@ export default function PostFeed({ userId }: { userId: string }) {
   );
 
   const renderFooter = () => {
-    // if (status === 'loading') return <LoadingPost />;
+    if (status === 'pending') return <ActivityIndicator />;
     if (status === 'error') return <Text>Something went wrong. Please try again later.</Text>;
-    return <View ref={ref} />;
+    if (hasNextPage)
+      return (
+        <InView onChange={(inView) => inView && fetchNextPage()}>
+          <View style={{ height: 1 }} />
+        </InView>
+      );
+    return null;
   };
 
   return (
@@ -101,10 +92,6 @@ export default function PostFeed({ userId }: { userId: string }) {
       renderItem={renderItem}
       keyExtractor={(item, index) => item.id || index.toString()}
       ListFooterComponent={renderFooter}
-      onEndReached={() => {
-        if (inView) fetchNextPage();
-      }}
-      onEndReachedThreshold={0.1}
     />
   );
 }

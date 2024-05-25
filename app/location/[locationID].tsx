@@ -9,17 +9,14 @@ import ImagePick from '@/components/ImagePicker';
 import SearchBar from '@/components/SearchBar';
 
 const SearchResults = () => {
-  const { query } = useLocalSearchParams();
+  const { locationID } = useLocalSearchParams();
 
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View>
-          <SearchBar initialQuery={''} />
-        </View>
-        <View>
           <View className="m-4">
-            <Text className="text-white font-pmedium">Search Results for: {query}</Text>
+            <Text className="text-white font-pmedium">Location id: {locationID}</Text>
           </View>
           <View>
             <SearchCard />

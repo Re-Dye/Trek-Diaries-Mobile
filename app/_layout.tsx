@@ -39,7 +39,6 @@ export default function RootLayout() {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
-
   }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) {
@@ -53,6 +52,7 @@ export default function RootLayout() {
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
+        <Stack.Screen name="location/[locationID]" options={{ headerShown: false }} />
       </Stack>
     </QueryClientProvider>
   );
