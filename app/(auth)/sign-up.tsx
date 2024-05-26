@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, Button } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../../constants';
@@ -10,6 +10,8 @@ import { SignupData, SignupFormData } from '@/lib/zodSchema/signup';
 import { useForm, Controller } from "react-hook-form"
 import { signupFormSchema } from '@/lib/zodSchema/signup';
 import { zodResolver } from '@hookform/resolvers/zod';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function SignUp() {
 
@@ -19,7 +21,7 @@ export default function SignUp() {
       firstName: '',
       lastName: '',
       email: '',
-      dob: new Date().toISOString(),
+      dob: new Date().toLocaleDateString(), // use ISO format for default value
       password: '',
       confirmPassword: '',
     },
@@ -69,6 +71,19 @@ export default function SignUp() {
     mutate(res);
   };
 
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
+  const onChangeDate = (event:any, selectedDate:any) => {
+    const currentDate = selectedDate || date;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const showDatepicker = () => {
+    setShow(true);
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -80,17 +95,17 @@ export default function SignUp() {
             name={'firstName'}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <>
-              <Forms
-                title="First Name"
-                placeholder="First Name"
-                value={value}
-                onChangeText={onChange}
-                otherStyles="mt-7"
-              />
-              {error && <Text className='flex justify-center items-center text-base text-red-700'>
-              {error.message}
-            </Text>}
-            </>
+                <Forms
+                  title="First Name"
+                  placeholder="First Name"
+                  value={value}
+                  onChangeText={onChange}
+                  otherStyles="mt-7"
+                />
+                {error && <Text className='flex justify-center items-center text-base text-red-700'>
+                  {error.message}
+                </Text>}
+              </>
             )}
           />
           <Controller
@@ -98,72 +113,104 @@ export default function SignUp() {
             name={'lastName'}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <>
-              <Forms
-                title="Last Name"
-                placeholder="Last Name"
-                value={value}
-                onChangeText={onChange}
-                otherStyles="mt-7"
-              />
-              {error && <Text className='flex justify-center items-center text-base text-red-700'>
-              {error.message}
-            </Text>}
+                <Forms
+                  title="Last Name"
+                  placeholder="Last Name"
+                  value={value}
+                  onChangeText={onChange}
+                  otherStyles="mt-7"
+                />
+                {error && <Text className='flex justify-center items-center text-base text-red-700'>
+                  {error.message}
+                </Text>}
               </>
             )}
           />
           <Controller
             control={control}
             name={'email'}
-            render={({ field: { value, onChange },fieldState: { error } }) => (
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
               <>
-              <Forms
-                title="Email"
-                placeholder="ram@gmail.com"
-                value={value}
-                onChangeText={onChange}
-                otherStyles="mt-7"
-                keyboardType="email-address"
-              />
-              {error && <Text className='flex justify-center items-center text-base text-red-700'>
-              {error.message}
-            </Text>}
-            </>
+                <Forms
+                  title="Email"
+                  placeholder="ram@gmail.com"
+                  value={value}
+                  onChangeText={onChange}
+                  otherStyles="mt-7"
+                  keyboardType="email-address"
+                />
+                {error && <Text className='flex justify-center items-center text-base text-red-700'>
+                  {error.message}
+                </Text>}
+              </>
+            )}
+          />
+           <Controller
+            control={control}
+            name={'dob'}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <>
+                <View className="flex-col mt-6">
+                  <Text className='text-white'>Date of Birth</Text>
+                  <View className="flex-row justify-between h-16 px-4 mt-3 border-2 border-black-200 bg-black-100 text-gray-600 rounded-2xl focus:border-secondary items-center ">
+                    <Text className='text-gray-500'>DOB: {new Date(value).toLocaleDateString()}</Text>
+                    <MaterialIcons name="date-range" size={32} color="grey" onPress={showDatepicker} className='flex justify-end' />
+                  </View>
+                </View>
+                {show && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={new Date(value)}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    onChange={(event, selectedDate:any) => {
+                      setShow(false);
+                      onChange(selectedDate.toLocaleDateString());
+                      onChangeDate(event, selectedDate);
+                    }}
+                  />
+                )}
+                {error && <Text className='flex justify-center items-center text-base text-red-700'>
+                  {error.message}
+                </Text>}
+              </>
             )}
           />
           <Controller
             control={control}
             name={'password'}
-            render={({ field: { value, onChange },fieldState: { error } }) => (
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
               <>
-              <Forms
-                title="Password"
-                placeholder="set your password"
-                value={value}
-                onChangeText={onChange}
-                otherStyles="mt-7"
-              />
-              {error && <Text className='flex justify-center items-center text-base text-red-700'>
-              {error.message}
-            </Text>}
-            </>
+                <Forms
+                  title="Password"
+                  placeholder="set your password"
+                  value={value}
+                  onChangeText={onChange}
+                  otherStyles="mt-7"
+                />
+                {error && <Text className='flex justify-center items-center text-base text-red-700'>
+                  {error.message}
+                </Text>}
+              </>
             )}
           />
           <Controller
             control={control}
             name={'confirmPassword'}
-            render={({ field: { value, onChange },fieldState: { error } }) => (
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
               <>
-              <Forms
-                title="Confirm Password"
-                placeholder="confirm your password"
-                value={value}
-                onChangeText={onChange}
-                otherStyles="mt-7"
-              />
-              {error && <Text className='flex justify-center items-center text-base text-red-700'>
-              {error.message}
-            </Text>}
-            </>
+                <Forms
+                  title="Confirm Password"
+                  placeholder="confirm your password"
+                  value={value}
+                  onChangeText={onChange}
+                  otherStyles="mt-7"
+                />
+                {error && <Text className='flex justify-center items-center text-base text-red-700'>
+                  {error.message}
+                </Text>}
+              </>
             )}
           />
           <CustomButton
