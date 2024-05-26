@@ -42,7 +42,7 @@ export const getAlgoliaAppId = (): string => {
   const secret = process.env.EXPO_PUBLIC_ALGOLIA_APP_ID;
 
   if (!secret || secret.length === 0) {
-    throw new Error('The environment variable NEXT_PUBLIC_ALGOLIA_APP_ID is not set.');
+    throw new Error('The environment variable EXPO_PUBLIC_ALGOLIA_APP_ID is not set.');
   }
 
   return secret;
@@ -62,7 +62,7 @@ export const getAlgoliaApiKey = (): string => {
   const secret = process.env.EXPO_PUBLIC_ALGOLIA_API_KEY;
 
   if (!secret || secret.length === 0) {
-    throw new Error('The environment variable NEXT_PUBLIC_ALGOLIA_API_KEY is not set.');
+    throw new Error('The environment variable EXPO_PUBLIC_ALGOLIA_API_KEY is not set.');
   }
 
   return secret;
@@ -72,7 +72,7 @@ export const getAlgoliaIndexName = (): string => {
   const secret = process.env.EXPO_PUBLIC_ALGOLIA_INDEX_NAME;
 
   if (!secret || secret.length === 0) {
-    throw new Error('The environment variable NEXT_PUBLIC_ALGOLIA_INDEX_NAME is not set.');
+    throw new Error('The environment variable EXPO_PUBLIC_ALGOLIA_INDEX_NAME is not set.');
   }
 
   return secret;
@@ -82,7 +82,7 @@ export const getCloudinaryName = (): string => {
   const secret = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
   if (!secret || secret.length === 0) {
-    throw new Error('The environment variable NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is not set.');
+    throw new Error('The environment variable EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME is not set.');
   }
 
   return secret;
@@ -92,7 +92,7 @@ export const getCloudinaryApiKey = (): string => {
   const secret = process.env.EXPO_PUBLIC_CLOUDINARY_API_KEY;
 
   if (!secret || secret.length === 0) {
-    throw new Error('The environment variable NEXT_PUBLIC_CLOUDINARY_API_KEY is not set.');
+    throw new Error('The environment variable EXPO_PUBLIC_CLOUDINARY_API_KEY is not set.');
   }
 
   return secret;
@@ -112,7 +112,21 @@ export const getCloudinaryFolderName = (): string => {
   const secret = process.env.EXPO_PUBLIC_CLOUDINARY_FOLDER_NAME;
 
   if (!secret || secret.length === 0) {
-    throw new Error('The environment variable NEXT_PUBLIC_CLOUDINARY_FOLDER_NAME is not set.');
+    throw new Error('The environment variable EXPO_PUBLIC_CLOUDINARY_FOLDER_NAME is not set.');
+  }
+
+  return secret;
+};
+
+export const getBaseUrl = (): string => {
+  return process.env.VERCEL_PROJECT_PRODUCTION_URL || 'http://localhost:8081';
+};
+
+export const getWebsiteUrl = (): string => {
+  const secret = process.env.EXPO_PUBLIC_WEBSITE_URL;
+
+  if (!secret || secret.length === 0) {
+    throw new Error('The environment variable EXPO_PUBLIC_WEBSITE_URL is not set.');
   }
 
   return secret;
