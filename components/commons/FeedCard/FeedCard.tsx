@@ -1,10 +1,10 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { images } from '@/constants';
 import handleRegisteredTime from '@/lib/utilities/handleRegisteredTime';
+import LikeButton from './LikeButton';
 
 interface Owner {
   id: string;
@@ -27,7 +27,7 @@ export default function FeedCard({
   owner,
   rating,
 }: {
-  userId: string | undefined;
+  userId: string;
   id: string;
   location: Location;
   registered_time: string;
@@ -74,12 +74,7 @@ export default function FeedCard({
           />
         </View>
         <View className="flex-row space-x-4 items-center justify-start my-2">
-          <View className="flex-row items-center  ">
-            <Ionicons name="heart" size={32} color="red" />
-            <Text className="text-white font-pmdedium text-[20px] text-center m-2 pb-1">
-              {likes}
-            </Text>
-          </View>
+          <LikeButton likes={likes} postId={id} userId={userId} />
           <FontAwesome5 name="comment-alt" size={25} color="grey" />
         </View>
       </View>

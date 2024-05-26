@@ -38,8 +38,6 @@ const SearchBar = ({ initialQuery }: { initialQuery: string }) => {
             return;
           }
 
-          console.log('pathname', pathname);
-
           if (pathname.startsWith('/search')) {
             router.setParams({ query });
           } else {

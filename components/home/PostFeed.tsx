@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native';
-import FeedCard from '../commons/FeedCard';
+import FeedCard from '../commons/FeedCard/FeedCard';
 // import LoadingPost from '../LoadingPost/LoadingPost';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { CONSTANTS } from '@/lib/constants';
