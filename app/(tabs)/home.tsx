@@ -20,6 +20,7 @@ export default function Home() {
       <ScrollView>
         <View>
           <SearchBar initialQuery="" />
+          <DummyLocation />
           {session && <PostFeed userId={session.id} />}
         </View>
       </ScrollView>
