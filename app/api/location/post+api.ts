@@ -1,4 +1,4 @@
-import { addPost, getPost, getPosts } from "@/lib/db/actions";
+import { addPost, getPosts } from "@/lib/db/actions";
 import { addPostRequestSchema } from "@/lib/zodSchema/addPost";
 import { ZodError } from "zod";
 
@@ -25,7 +25,6 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   const params = new URL(req.url).searchParams;
-  const userId: string | null = params.get("userId");
   const locationId: string | null = params.get("locationId");
   const _limit: string | null = params.get("limit");
   const last: string | null = params.get("last");
