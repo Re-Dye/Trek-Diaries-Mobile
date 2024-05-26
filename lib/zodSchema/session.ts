@@ -8,6 +8,7 @@ export const sessionSchema = z.object({
   dob: z.string(),
   picture: z.string().optional(),
   iat: z.number(),
+  ein: z.number(),
 });
 
 export const sessionPayloadSchema = sessionSchema.omit({ token: true });

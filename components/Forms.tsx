@@ -7,13 +7,13 @@ export default function Forms({
   title,
   value,
   placeholder,
-  handleChangeText,
+  onChangeText,
   otherStyles,
 }: {
   title: string;
   value: string;
   placeholder: string;
-  handleChangeText: (e: string) => void;
+  onChangeText: (e: string) => void;
   otherStyles?: string;
   keyboardType?: 'email-address' | 'default';
 }) {
@@ -27,10 +27,10 @@ export default function Forms({
           value={value}
           placeholder={placeholder}
           placeholderTextColor="#7b7b8b"
-          onChangeText={handleChangeText}
-          secureTextEntry={title === 'Password' && !showPassword}
+          onChangeText={onChangeText}
+          secureTextEntry={(title === 'Password' || title === 'Confirm Password') && !showPassword}
         />
-        {title === 'Password' && (
+        {(title === 'Password' || title === 'Confirm Password') && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Image
               source={!showPassword ? icons.eye : icons.eyeHide}

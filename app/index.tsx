@@ -28,7 +28,7 @@ export default function App() {
             Embark on an Adventure: Connect together and Explore Limitless Trails with TrekDiaries
           </Text>
           <CustomButton
-            title="Continue with email"
+            title="Continue"
             handlePress={() => router.push('/sign-in')}
             containerStyles="w-full mt-7"
           />
