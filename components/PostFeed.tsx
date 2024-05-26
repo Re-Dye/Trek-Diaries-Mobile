@@ -15,7 +15,7 @@ interface Response {
 
 export default function PostFeed({ userId }: { userId: string }) {
   const [inView, setInView] = useState(false);
-  const { data, status, fetchNextPage} = useInfiniteQuery<Response, Error>({
+  const { data, status, fetchNextPage } = useInfiniteQuery<Response, Error>({
     queryKey: ['posts', 'feed', userId],
     queryFn: async ({ pageParam = '00000000-0000-0000-0000-000000000000' }) => {
       const res = await fetch(
@@ -65,9 +65,17 @@ export default function PostFeed({ userId }: { userId: string }) {
         status === 'success' &&
         data.pages.map((page, i) => {
           if (page === undefined || page.posts === undefined) {
-            return <Text key={i} className='text-base text-white'>Not Found!</Text>;
+            return (
+              <Text key={i} className="text-base text-white">
+                Not Found!
+              </Text>
+            );
           } else if (page.posts.length === 0 && i === 0) {
-            return <Text key={i} className='text-base text-white'>No Posts Found!</Text>;
+            return (
+              <Text key={i} className="text-base text-white">
+                No Posts Found!
+              </Text>
+            );
           } else {
             return page.posts.map((post, i) => (
               <FeedCard
@@ -94,7 +102,7 @@ export default function PostFeed({ userId }: { userId: string }) {
       )}
 
       <InView onChange={(inView: boolean) => setInView(inView)}>
-        <Text>abc</Text>
+        <Text> </Text>
       </InView>
     </IOScrollView>
   );

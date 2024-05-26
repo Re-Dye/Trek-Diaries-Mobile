@@ -5,7 +5,7 @@ import { useSessionStore } from '@/lib/zustand/session';
 export default function AuthLayout() {
   const { session } = useSessionStore();
 
-  if (session && new Date < new Date(session.ein + session.iat)) {
+  if (session && new Date() < new Date(session.ein + session.iat)) {
     return <Redirect href={'/home'} />;
   }
 

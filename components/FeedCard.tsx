@@ -37,8 +37,6 @@ export default function FeedCard({
   owner: Owner;
   rating: number;
 }) {
-  const photo =
-    'https://res.cloudinary.com/dkid8h6ss/image/upload/v1703939240/Trek-Diaries/fdzc7z87a57lgzqzy75o.jpg';
   return (
     <View>
       <View className="m-3 p-4 bg-black-100 rounded-2xl">
@@ -76,9 +74,11 @@ export default function FeedCard({
           />
         </View>
         <View className="flex-row space-x-4 items-center justify-start my-2">
-          <View className='flex-row items-center  '>
-          <Ionicons name="heart" size={32} color="red" />
-          <Text className='text-white font-pmdedium text-[20px] text-center m-2 pb-1'>{likes}</Text>
+          <View className="flex-row items-center  ">
+            <Ionicons name="heart" size={32} color="red" />
+            <Text className="text-white font-pmdedium text-[20px] text-center m-2 pb-1">
+              {likes}
+            </Text>
           </View>
           <FontAwesome5 name="comment-alt" size={25} color="grey" />
         </View>

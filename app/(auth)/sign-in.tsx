@@ -52,9 +52,8 @@ export default function SignIn() {
     },
   });
   const handleSignIn = async (data: LoginFormData) => {
-    signin(data)
+    signin(data);
   };
-
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -75,9 +74,11 @@ export default function SignIn() {
                   otherStyles="mt-7"
                   keyboardType="email-address"
                 />
-                {error && <Text className='flex justify-center items-center text-base text-red-700'>
-                  {error.message}
-                </Text>}
+                {error && (
+                  <Text className="flex justify-center items-center text-base text-red-700">
+                    {error.message}
+                  </Text>
+                )}
               </>
             )}
           />
@@ -93,9 +94,11 @@ export default function SignIn() {
                   onChangeText={onChange}
                   otherStyles="mt-7"
                 />
-                {error && <Text className='flex justify-center items-center text-base text-red-700'>
-                  {error.message}
-                </Text>}
+                {error && (
+                  <Text className="flex justify-center items-center text-base text-red-700">
+                    {error.message}
+                  </Text>
+                )}
               </>
             )}
           />

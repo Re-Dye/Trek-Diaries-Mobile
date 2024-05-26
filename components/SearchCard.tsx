@@ -12,7 +12,7 @@ export default function SearchCard() {
     <View>
       <View className="m-3 p-4 bg-black-100 rounded-2xl">
         <View className="flex-row m-2 items-center">
-          <View className='mr-4'>
+          <View className="mr-4">
             <Entypo name="location" size={24} color="white" className="m" />
           </View>
           <View>

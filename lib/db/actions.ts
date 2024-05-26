@@ -238,7 +238,7 @@ export const addLocation = async (location: InsertLocation): Promise<ReturnLocat
       })
       .returning()
       .prepare('add_location');
-    const res = await addLocation.execute({address, description});
+    const res = await addLocation.execute({ address, description });
     return res[0];
   } catch (error) {
     console.error('Error in adding location: ', error);
