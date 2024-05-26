@@ -18,7 +18,7 @@ export async function GET(req: Request) {
 
       const { posts, next } = await getFeed(userId, limit, last);
 
-      return Response.json(JSON.stringify({ posts, next }), {
+      return Response.json({ posts, next }, {
         status: 200,
       });
     }

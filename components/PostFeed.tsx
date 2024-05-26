@@ -51,7 +51,7 @@ export default function PostFeed({ userId }: { userId: string }) {
       fetchNextPage();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView]);;
+  }, [inView]);
 
   return (
     <IOScrollView>
@@ -65,9 +65,9 @@ export default function PostFeed({ userId }: { userId: string }) {
         status === 'success' &&
         data.pages.map((page, i) => {
           if (page === undefined || page.posts === undefined) {
-            return <Text key={i}>Not Found!</Text>;
+            return <Text key={i} className='text-base text-white'>Not Found!</Text>;
           } else if (page.posts.length === 0 && i === 0) {
-            return <Text key={i}>No Posts Found!</Text>;
+            return <Text key={i} className='text-base text-white'>No Posts Found!</Text>;
           } else {
             return page.posts.map((post, i) => (
               <FeedCard
