@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
-import { icons } from '../constants';
+import { icons } from '../../constants';
 
 const SearchBar = ({ initialQuery }: { initialQuery: string }) => {
   const pathname = usePathname();

@@ -1,8 +1,8 @@
 import { View, Text, ScrollView, TextInput } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ImagePick from '../../components/ImagePicker';
-import CustomButton from '../../components/CustomButton';
+import ImagePick from '../../components/commons/ImagePicker';
+import CustomButton from '../../components/commons/CustomButton';
 import { router } from 'expo-router';
 
 export default function Create() {

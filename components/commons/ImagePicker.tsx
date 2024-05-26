@@ -1,7 +1,7 @@
 import { Image, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { icons } from '../constants';
+import { icons } from '../../constants';
 
 export default function ImagePick() {
   const [image, setImage] = useState<string | null>(null);

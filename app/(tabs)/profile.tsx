@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import React from 'react';
-import CustomButton from '@/components/CustomButton';
+import CustomButton from '@/components/commons/CustomButton';
 import { useSessionStore } from '@/lib/zustand/session';
 import { setStorageItemAsync } from '@/lib/storage';
 import { useRouter } from 'expo-router';

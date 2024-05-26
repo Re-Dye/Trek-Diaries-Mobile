@@ -2,11 +2,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import SearchCard from '@/components/SearchCard';
+import SearchCard from '@/components/search/SearchCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomButton from '@/components/CustomButton';
-import ImagePick from '@/components/ImagePicker';
-import SearchBar from '@/components/SearchBar';
+import CustomButton from '@/components/commons/CustomButton';
+import ImagePick from '@/components/commons/ImagePicker';
+import SearchBar from '@/components/search/SearchBar';
 
 const SearchResults = () => {
   const { query } = useLocalSearchParams();

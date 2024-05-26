@@ -1,9 +1,9 @@
 import { View, ScrollView, Text } from 'react-native';
 import React from 'react';
-import FeedCard from '@/components/FeedCard';
+import FeedCard from '@/components/commons/FeedCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import SearchBar from '@/components/SearchBar';
-import PostFeed from '@/components/PostFeed';
+import SearchBar from '@/components/search/SearchBar';
+import PostFeed from '@/components/home/PostFeed';
 import { TouchableOpacity, Image, Alert } from 'react-native';
 import { Redirect, router } from 'expo-router';
 import { useSessionStore } from '@/lib/zustand/session';
