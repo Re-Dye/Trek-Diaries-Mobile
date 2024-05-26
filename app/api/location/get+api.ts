@@ -1,7 +1,14 @@
+import { authorize } from '@/lib/auth';
 import { getFollowedLocations } from '@/lib/db/actions';
 import { ReturnFollowedLocation } from '@/lib/zodSchema/dbTypes';
 
 export async function GET(req: Request) {
+  const isAuth = authorize(req);
+
+  if (!isAuth) {
+    return Response.json('Unauthorized', { status: 401 });
+  }
+
   const params = new URL(req.url).searchParams;
   const userId: string | null = params.get('userId');
 

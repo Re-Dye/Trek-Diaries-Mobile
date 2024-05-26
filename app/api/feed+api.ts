@@ -1,7 +1,14 @@
+import { authorize } from '@/lib/auth';
 import { getFeed } from '@/lib/db/actions';
 
 export async function GET(req: Request) {
   try {
+    const isAuth = authorize(req);
+
+    if (!isAuth) {
+      return Response.json('Unauthorized', { status: 401 });
+    }
+    
     const params = new URL(req.url).searchParams;
     const userId = params.get('userId');
     const _limit = params.get('limit');

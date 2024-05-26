@@ -7,6 +7,8 @@ import { CONSTANTS } from '@/lib/constants';
 import { ReturnPost } from '@/lib/zodSchema/dbTypes';
 import Toast from 'react-native-toast-message';
 import { IOScrollView, InView } from 'react-native-intersection-observer';
+import { useSessionStore } from '@/lib/zustand/session';
+import { router } from 'expo-router';
 
 interface Response {
   posts: Array<ReturnPost>;
@@ -15,6 +17,7 @@ interface Response {
 
 export default function PostFeed({ userId }: { userId: string }) {
   const [inView, setInView] = useState(false);
+  const { session } = useSessionStore();
   const { data, status, fetchNextPage } = useInfiniteQuery<Response, Error>({
     queryKey: ['posts', 'feed', userId],
     queryFn: async ({ pageParam = '00000000-0000-0000-0000-000000000000' }) => {
@@ -22,6 +25,9 @@ export default function PostFeed({ userId }: { userId: string }) {
         `/api/feed?userId=${userId}&last=${pageParam}&limit=${CONSTANTS.POSTS_PER_SCROLL}`,
         {
           method: 'GET',
+          headers: {
+            "Authorization": `Bearer ${session?.token}`,
+          }
         }
       );
       if (res.status === 200) {
@@ -32,14 +38,19 @@ export default function PostFeed({ userId }: { userId: string }) {
           text1: 'Invalid Request',
           text2: 'Please try again with valid parameters',
         });
-        throw new Error('Invalid Request');
+      } else if (res.status === 401) {
+        Toast.show({
+          type: 'error',
+          text1: 'Unauthorized',
+          text2: 'Please login to view feed',
+        });
+        router.push("/sign-in");
       } else {
         Toast.show({
           type: 'error',
           text1: 'Something went wrong',
           text2: 'Please try again later',
         });
-        throw new Error('Something went wrong');
       }
     },
     getNextPageParam: (lastPage) => lastPage?.next ?? null,

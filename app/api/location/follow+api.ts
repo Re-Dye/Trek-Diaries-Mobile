@@ -1,8 +1,15 @@
 import { followLocationSchema } from '@/lib/zodSchema/followLocation';
 import { ZodError } from 'zod';
 import { followLocation, checkFollowLocation, unfollowLocation } from '@/lib/db/actions';
+import { authorize } from '@/lib/auth';
 
 export async function POST(req: Request) {
+  const isAuth = authorize(req);
+
+  if (!isAuth) {
+    return Response.json('Unauthorized', { status: 401 });
+  }
+  
   try {
     const data = followLocationSchema.parse(await req.json());
 
