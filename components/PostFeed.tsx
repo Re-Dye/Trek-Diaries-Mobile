@@ -55,7 +55,7 @@ export default function PostFeed({ userId }: { userId: string }) {
 
   return (
     <IOScrollView>
-      <Text className='text-base text-white'>Post Feed</Text>
+      {/* <Text className='text-base text-white'>Post Feed</Text> */}
       {status === 'pending' ? (
         // <LoadingPost />
         <Text>Loading...</Text>
