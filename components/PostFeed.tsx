@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, Alert } from 'react-native';
+import { Text } from 'react-native';
 import FeedCard from './FeedCard';
 // import LoadingPost from '../LoadingPost/LoadingPost';
 import { useInfiniteQuery } from '@tanstack/react-query';
