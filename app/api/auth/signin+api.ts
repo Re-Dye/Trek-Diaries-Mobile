@@ -4,19 +4,11 @@ import { findUser } from '@/lib/db/actions';
 import { sign } from 'jsonwebtoken';
 import { getAuthSecret } from '@/lib/secrets';
 import { Session, SessionPayload, sessionSchema } from '@/lib/zodSchema/session';
+import { ZodError } from 'zod';
 
 export async function POST(req: Request) {
   try {
-    let email: string, password: string;
-
-    try {
-      const credentials = loginSchema.parse(await req.json()); // validating the credentials
-      email = credentials.email;
-      password = credentials.password;
-    } catch (error) {
-      console.log(error)
-      return Response.json('Bad request.', { status: 400 });
-    }
+    const { email, password } = loginSchema.parse(await req.json()); // validating the credentials
 
     /* check on database here */
     const result = await findUser(email);
@@ -54,6 +46,10 @@ export async function POST(req: Request) {
       status: 200,
     });
   } catch (error) {
+    if (error instanceof ZodError) {
+      return Response.json('Bad request.', { status: 400 });
+    }
+
     console.error(error);
     return Response.json('Server Error', { status: 500 });
   }

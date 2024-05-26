@@ -229,6 +229,7 @@ export const getComments = async (
 export const addLocation = async (location: InsertLocation): Promise<ReturnLocation> => {
   try {
     const { address, description } = insertLocationSchema.parse(location);
+    // console.log(address,description)
     const addLocation = db
       .insert(locations)
       .values({
@@ -237,7 +238,7 @@ export const addLocation = async (location: InsertLocation): Promise<ReturnLocat
       })
       .returning()
       .prepare('add_location');
-    const res = await addLocation.execute({ address, description });
+    const res = await addLocation.execute({address, description});
     return res[0];
   } catch (error) {
     console.error('Error in adding location: ', error);
