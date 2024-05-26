@@ -8,20 +8,26 @@ import { Link, router } from 'expo-router';
 import { useSessionStore } from '@/lib/zustand/session';
 import { Session, sessionSchema } from '@/lib/zodSchema/session';
 import { useMutation } from '@tanstack/react-query';
+import { Controller, useForm } from 'react-hook-form';
+import { LoginFormData, loginSchema } from '@/lib/zodSchema/login';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function SignIn() {
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    resolver: zodResolver(loginSchema),
   });
   const { mutate: signin, isPending } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (data: LoginFormData) => {
       const res = await fetch(`/api/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: form.email, password: form.password }),
+        body: JSON.stringify({ email: data.email, password: data.password }),
       });
 
       return { status: res.status, data: await res.json() };
@@ -42,6 +48,10 @@ export default function SignIn() {
       alert('Some error occured. Please try again later.');
     },
   });
+  const handleSignIn = async (data: LoginFormData) => {
+    signin(data)
+  };
+
 
   const { setSession } = useSessionStore();
 
@@ -51,24 +61,46 @@ export default function SignIn() {
         <View className="w-full justify-center min-h-[85vh] px-5 my-6">
           <Image source={images.logo} resizeMode="contain" className="w-[200px] h-[50px]" />
           <Text className="text-2xl text-white font-psemibold mt-10">Login to TrekDiaries</Text>
-          <Forms
-            title="Email"
-            placeholder="ram@gmail.com"
-            value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles="mt-7"
-            keyboardType="email-address"
+          <Controller
+            control={control}
+            name={'email'}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <>
+                <Forms
+                  title="Email"
+                  placeholder="ram@gmail.com"
+                  value={value}
+                  onChangeText={onChange}
+                  otherStyles="mt-7"
+                  keyboardType="email-address"
+                />
+                {error && <Text className='flex justify-center items-center text-base text-red-700'>
+                  {error.message}
+                </Text>}
+              </>
+            )}
           />
-          <Forms
-            title="Password"
-            placeholder="enter your password"
-            value={form.password}
-            handleChangeText={(e) => setForm({ ...form, password: e })}
-            otherStyles="mt-7"
+          <Controller
+            control={control}
+            name={'password'}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <>
+                <Forms
+                  title="Password"
+                  placeholder="enter your password"
+                  value={value}
+                  onChangeText={onChange}
+                  otherStyles="mt-7"
+                />
+                {error && <Text className='flex justify-center items-center text-base text-red-700'>
+                  {error.message}
+                </Text>}
+              </>
+            )}
           />
           <CustomButton
-            title="Sign In"
-            handlePress={signin}
+            title="Submit"
+            handlePress={handleSubmit(handleSignIn)}
             containerStyles="mt-7"
             isLoading={isPending}
           />
