@@ -4,8 +4,15 @@ import { ZodError } from 'zod';
 import { getAlgoliaAdminKey, getAlgoliaAppId } from '@/lib/secrets';
 import algoliasearch from 'algoliasearch';
 import { ReturnLocation } from '@/lib/zodSchema/dbTypes';
+import { authorize } from '@/lib/auth';
 
 export async function POST(req: Request) {
+  const isAuth = authorize(req);
+
+  if (!isAuth) {
+    return Response.json('Unauthorized', { status: 401 });
+  }
+  
   try {
     const client = algoliasearch(getAlgoliaAppId(), getAlgoliaAdminKey());
     // console.log(client);

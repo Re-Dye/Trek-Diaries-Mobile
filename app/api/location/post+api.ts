@@ -1,8 +1,15 @@
+import { authorize } from '@/lib/auth';
 import { addPost, getPosts } from '@/lib/db/actions';
 import { addPostRequestSchema } from '@/lib/zodSchema/addPost';
 import { ZodError } from 'zod';
 
 export async function POST(req: Request) {
+  const isAuth = authorize(req);
+
+  if (!isAuth) {
+    return Response.json('Unauthorized', { status: 401 });
+  }
+
   try {
     const data = addPostRequestSchema.parse(await req.json());
     await addPost({
