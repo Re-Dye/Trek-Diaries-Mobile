@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     if (!isMatch) {
       return Response.json('Invalid credentials', { status: 400 });
     }
-    
+
     const iat = Date.now();
     const ein = 30 * 24 * 60 * 60 * 1000;
 
@@ -42,7 +42,6 @@ export async function POST(req: Request) {
     });
 
     const res: Session = sessionSchema.parse({ token, ...payload });
-
     return Response.json(res, {
       status: 200,
     });
