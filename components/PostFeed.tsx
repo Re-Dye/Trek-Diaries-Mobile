@@ -1,14 +1,12 @@
-'use client';
-
-import React, { useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import FeedCard from './FeedCard';
 // import LoadingPost from '../LoadingPost/LoadingPost';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { CONSTANTS } from '@/lib/constants';
 import { ReturnPost } from '@/lib/zodSchema/dbTypes';
 import Toast from 'react-native-toast-message';
-import { InView } from 'react-native-intersection-observer';
+import { IOScrollView, InView } from 'react-native-intersection-observer';
 
 interface Response {
   posts: Array<ReturnPost>;
@@ -16,13 +14,13 @@ interface Response {
 }
 
 export default function PostFeed({ userId }: { userId: string }) {
-  const { data, status, fetchNextPage, hasNextPage } = useInfiniteQuery<Response, Error>({
+  const [inView, setInView] = useState(false);
+  const { data, status, fetchNextPage} = useInfiniteQuery<Response, Error>({
     queryKey: ['posts', 'feed', userId],
     queryFn: async ({ pageParam = '00000000-0000-0000-0000-000000000000' }) => {
       const res = await fetch(
         `/api/feed?userId=${userId}&last=${pageParam}&limit=${CONSTANTS.POSTS_PER_SCROLL}`,
         {
-          cache: 'no-store',
           method: 'GET',
         }
       );
@@ -49,49 +47,55 @@ export default function PostFeed({ userId }: { userId: string }) {
   });
 
   useEffect(() => {
-    if (InView) {
+    if (inView) {
       fetchNextPage();
     }
-  }, [InView]);
-
-  const renderItem = ({ item }: { item: ReturnPost }) => (
-    <FeedCard
-      userId={userId}
-      id={item.id}
-      registered_time={item.registered_time}
-      location={{
-        id: item.location_id,
-        address: item.location_address,
-      }}
-      description={item.description}
-      likes={item.likes_count}
-      imageURL={item.picture_url}
-      owner={{
-        id: item.owner_id,
-        name: item.owner_name,
-      }}
-      rating={item.rating || 0}
-    />
-  );
-
-  const renderFooter = () => {
-    if (status === 'pending') return <ActivityIndicator />;
-    if (status === 'error') return <Text>Something went wrong. Please try again later.</Text>;
-    if (hasNextPage)
-      return (
-        <InView onChange={(inView) => inView && fetchNextPage()}>
-          <View style={{ height: 1 }} />
-        </InView>
-      );
-    return null;
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);;
 
   return (
-    <FlatList
-      data={data ? data.pages.flatMap((page) => page.posts) : []}
-      renderItem={renderItem}
-      keyExtractor={(item, index) => item.id || index.toString()}
-      ListFooterComponent={renderFooter}
-    />
+    <IOScrollView>
+      <Text className='text-base text-white'>Post Feed</Text>
+      {status === 'pending' ? (
+        // <LoadingPost />
+        <Text>Loading...</Text>
+      ) : status === 'error' ? (
+        <Text>Something went wrong. Please try again later</Text>
+      ) : (
+        status === 'success' &&
+        data.pages.map((page, i) => {
+          if (page === undefined || page.posts === undefined) {
+            return <Text key={i}>Not Found!</Text>;
+          } else if (page.posts.length === 0 && i === 0) {
+            return <Text key={i}>No Posts Found!</Text>;
+          } else {
+            return page.posts.map((post, i) => (
+              <FeedCard
+                userId={userId}
+                key={i}
+                id={post.id}
+                registered_time={post.registered_time}
+                location={{
+                  id: post.location_id,
+                  address: post.location_address,
+                }}
+                description={post.description}
+                likes={post.likes_count}
+                imageURL={post.picture_url}
+                owner={{
+                  id: post.owner_id,
+                  name: post.owner_name,
+                }}
+                rating={post.rating || 0}
+              />
+            ));
+          }
+        })
+      )}
+
+      <InView onChange={(inView: boolean) => setInView(inView)}>
+        <Text>abc</Text>
+      </InView>
+    </IOScrollView>
   );
 }
