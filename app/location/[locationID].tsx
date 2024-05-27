@@ -19,7 +19,7 @@ const SearchResults = () => {
             <Text className="text-white font-pmedium">Location id: {locationID}</Text>
           </View>
           <View>
-            <SearchCard />
+            <SearchCard id={''} address={''} description={''} />
           </View>
         </View>
       </ScrollView>

@@ -6,8 +6,22 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import { images } from '@/constants';
 import handleRegisteredTime from '@/lib/utilities/handleRegisteredTime';
 import Entypo from '@expo/vector-icons/Entypo';
+import { useRouter } from 'expo-router';
 
-export default function SearchCard() {
+export default function SearchCard({
+  id,
+  address,
+  description,
+}: {
+  id: string;
+  address: string;
+  description: string;
+}) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/location/${id}`);
+  };
   return (
     <View>
       <View className="m-3 p-4 bg-black-100 rounded-2xl">
@@ -16,18 +30,13 @@ export default function SearchCard() {
             <Entypo name="location" size={24} color="white" className="m" />
           </View>
           <View>
-            <Text className="text-white font-psemibold"> Location Name</Text>
+            <Text className="text-white font-psemibold" onPress={handleClick}>
+              {address}
+            </Text>
           </View>
         </View>
         <View className="m-2">
-          <Text className="text-white font-pbook">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
-          </Text>
+          <Text className="text-white font-pbook">{description}</Text>
         </View>
       </View>
     </View>

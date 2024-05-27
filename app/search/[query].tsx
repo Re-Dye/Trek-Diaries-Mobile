@@ -22,7 +22,7 @@ const SearchResults = () => {
             <Text className="text-white font-pmedium">Search Results for: {query}</Text>
           </View>
           <View>
-            <SearchCard />
+            <SearchCard id={''} address={''} description={''} />
           </View>
         </View>
       </ScrollView>
