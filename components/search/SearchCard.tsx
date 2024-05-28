@@ -1,10 +1,5 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { SimpleLineIcons } from '@expo/vector-icons';
-import { images } from '@/constants';
-import handleRegisteredTime from '@/lib/utilities/handleRegisteredTime';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useRouter } from 'expo-router';
 
