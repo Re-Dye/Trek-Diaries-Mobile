@@ -57,6 +57,7 @@ const SearchResults = () => {
             ) : (
               locations.map((location) => (
                 <SearchCard
+                  key={location.objectID}
                   id={location.objectID}
                   address={location.address}
                   description={location.description}

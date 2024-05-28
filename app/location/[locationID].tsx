@@ -1,26 +1,74 @@
 // app/search/[query].tsx
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import SearchCard from '@/components/search/SearchCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomButton from '@/components/commons/CustomButton';
-import ImagePick from '@/components/commons/ImagePicker';
-import SearchBar from '@/components/search/SearchBar';
+import { useQuery } from '@tanstack/react-query';
+import { ReturnLocation } from '@/lib/zodSchema/dbTypes';
+import { useSessionStore } from '@/lib/zustand/session';
+import LocationFeed from '@/components/location/LocationFeed';
 
 const SearchResults = () => {
   const { locationID } = useLocalSearchParams();
+  const { session } = useSessionStore();
+  const [location, setLocation] = useState<ReturnLocation | null>(null);
+  const { data, isPending } = useQuery({
+    queryKey: ['search', locationID],
+    queryFn: async () => {
+      const res = await fetch(`/api/location?locationId=${locationID}`, {
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+      });
+      const status = res.status;
+      const json = await res.json();
+      return { status, json };
+    },
+  });
+
+  useEffect(() => {
+    if (data === undefined) {
+      return;
+    }
+
+    if (data.status === 200) {
+      const location: ReturnLocation = data.json;
+      setLocation(location);
+    }
+
+    if (data.status === 400) {
+      alert(data.json);
+      router.push('/home');
+    }
+
+    if (data.status === 500) {
+      alert('Some error occurred. Please try again later.');
+      router.push('/home');
+    }
+
+    if (data.status === 401) {
+      alert('Unauthorized. Please login first.');
+      router.push('/sign-in');
+    }
+  }, [data]);
 
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View>
-          <View className="m-4">
-            <Text className="text-white font-pmedium">Location id: {locationID}</Text>
-          </View>
-          <View>
-            <SearchCard id={''} address={''} description={''} />
-          </View>
+          {isPending || location === null ? (
+            <Text>Loading...</Text>
+          ) : (
+            <View>
+              <SearchCard
+                id={location.id}
+                address={location.address}
+                description={location.description}
+              />
+              <LocationFeed locationId={location.id} />
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

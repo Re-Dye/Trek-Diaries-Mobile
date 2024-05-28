@@ -1,25 +1,22 @@
 import { authorize } from '@/lib/auth';
-import { getFollowedLocations } from '@/lib/db/actions';
-import { ReturnFollowedLocation } from '@/lib/zodSchema/dbTypes';
+import { getLocation } from '@/lib/db/actions';
 
 export async function GET(req: Request) {
   const isAuth = authorize(req);
-
   if (!isAuth) {
     return Response.json('Unauthorized', { status: 401 });
   }
 
-  const params = new URL(req.url).searchParams;
-  const userId: string | null = params.get('userId');
+  const searchParams = new URL(req.url).searchParams;
+  const locationId = searchParams.get('locationId');
 
-  if (!userId) {
+  if (!locationId) {
     return Response.json('Invalid Request', { status: 400 });
   }
 
   try {
-    const locations: Array<ReturnFollowedLocation> = await getFollowedLocations(userId);
-
-    return Response.json(locations, { status: 200 });
+    const location = await getLocation(locationId);
+    return Response.json(location, { status: 200 });
   } catch (error) {
     console.error(error);
     return Response.json('Internal Server Error', { status: 500 });

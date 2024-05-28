@@ -39,17 +39,17 @@ export async function GET(req: Request) {
   try {
     /* if type is paginated and locationId is not given */
     if (!locationId || !_limit || !last) {
-      return new Response('Invalid Request', { status: 400 });
+      return Response.json('Invalid Request', { status: 400 });
     } else {
       const limit = +_limit;
 
       if (isNaN(limit)) {
-        return new Response('Invalid Request', { status: 400 });
+        return Response.json('Invalid Request', { status: 400 });
       }
 
       const { posts, next } = await getPosts(locationId, limit, last);
 
-      return Response.json(JSON.stringify({ posts, next }), {
+      return Response.json({ posts, next }, {
         status: 200,
       });
     }

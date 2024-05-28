@@ -1,7 +1,8 @@
 import { followLocationSchema } from '@/lib/zodSchema/followLocation';
 import { ZodError } from 'zod';
-import { followLocation, checkFollowLocation, unfollowLocation } from '@/lib/db/actions';
+import { followLocation, checkFollowLocation, unfollowLocation, getFollowedLocations } from '@/lib/db/actions';
 import { authorize } from '@/lib/auth';
+import { ReturnFollowedLocation } from '@/lib/zodSchema/dbTypes';
 
 export async function POST(req: Request) {
   const isAuth = authorize(req);
@@ -42,6 +43,30 @@ export async function POST(req: Request) {
       return Response.json('Invalid Request', { status: 400 });
     }
     console.error('Error in following location', error);
+    return Response.json('Internal Server Error', { status: 500 });
+  }
+}
+
+export async function GET(req: Request) {
+  const isAuth = authorize(req);
+
+  if (!isAuth) {
+    return Response.json('Unauthorized', { status: 401 });
+  }
+
+  const params = new URL(req.url).searchParams;
+  const userId: string | null = params.get('userId');
+
+  if (!userId) {
+    return Response.json('Invalid Request', { status: 400 });
+  }
+
+  try {
+    const locations: Array<ReturnFollowedLocation> = await getFollowedLocations(userId);
+
+    return Response.json(locations, { status: 200 });
+  } catch (error) {
+    console.error(error);
     return Response.json('Internal Server Error', { status: 500 });
   }
 }
