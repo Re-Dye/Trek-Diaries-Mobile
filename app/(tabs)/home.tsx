@@ -1,6 +1,5 @@
 import { View, ScrollView, Text } from 'react-native';
 import React from 'react';
-import FeedCard from '@/components/commons/FeedCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchBar from '@/components/search/SearchBar';
 import PostFeed from '@/components/home/PostFeed';

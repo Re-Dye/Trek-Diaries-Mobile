@@ -584,38 +584,6 @@ export const isPostLiked = async (data: LikePost): Promise<boolean> => {
   }
 };
 
-export const likePost = async (data: LikePost): Promise<number> => {
-  const pool = new Pool({ connectionString: getDbUrl() });
-  try {
-    const db = drizzle(pool);
-    const likePost = db.transaction(async (trx) => {
-      await trx
-        .insert(usersLikePosts)
-        .values({
-          user_id: data.userId,
-          post_id: data.postId,
-        })
-        .execute();
-      const res: { likes: number }[] = await trx
-        .update(posts)
-        .set({
-          likes_count: sql<number>`${posts.likes_count} + 1`,
-        })
-        .where(eq(posts.id, data.postId))
-        .returning({ likes: posts.likes_count })
-        .execute();
-      return res[0].likes;
-    });
-    const likes = await likePost;
-    pool.end();
-    return likes;
-  } catch (error) {
-    console.error('Error in liking post', error);
-    pool.end();
-    throw new Error('Error in liking post: ' + error);
-  }
-};
-
 export const dislikePost = async (data: LikePost) => {
   const pool = new Pool({ connectionString: getDbUrl() });
   try {
