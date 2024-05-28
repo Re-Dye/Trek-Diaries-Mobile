@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   if (!isAuth) {
     return Response.json('Unauthorized', { status: 401 });
   }
-  
+
   try {
     const data = followLocationSchema.parse(await req.json());
 

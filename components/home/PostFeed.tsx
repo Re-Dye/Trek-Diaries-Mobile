@@ -26,8 +26,8 @@ export default function PostFeed({ userId }: { userId: string }) {
         {
           method: 'GET',
           headers: {
-            "Authorization": `Bearer ${session?.token}`,
-          }
+            Authorization: `Bearer ${session?.token}`,
+          },
         }
       );
       if (res.status === 200) {
@@ -44,7 +44,7 @@ export default function PostFeed({ userId }: { userId: string }) {
           text1: 'Unauthorized',
           text2: 'Please login to view feed',
         });
-        router.push("/sign-in");
+        router.push('/sign-in');
       } else {
         Toast.show({
           type: 'error',

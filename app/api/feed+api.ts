@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     if (!isAuth) {
       return Response.json('Unauthorized', { status: 401 });
     }
-    
+
     const params = new URL(req.url).searchParams;
     const userId = params.get('userId');
     const _limit = params.get('limit');

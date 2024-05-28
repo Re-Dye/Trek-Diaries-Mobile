@@ -19,7 +19,7 @@ export const authorize = (req: Request): boolean => {
       algorithms: ['HS256'],
     });
 
-    if (!payload || typeof payload === "string") {
+    if (!payload || typeof payload === 'string') {
       return false;
     }
 

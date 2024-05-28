@@ -4,6 +4,8 @@ import Toast from 'react-native-toast-message';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { LikePost } from '@/lib/zodSchema/likePost';
 import { useEffect, useRef, useState } from 'react';
+import { router } from 'expo-router';
+import { useSessionStore } from '@/lib/zustand/session';
 
 type Action = 'like' | 'dislike';
 
@@ -18,7 +20,7 @@ export default function LikeButton({
 }) {
   const [Likes, setLike] = useState(likes);
   const [isLiked, setIsLiked] = useState(false);
-
+  const { session } = useSessionStore();
   const actionRef = useRef<Action>('like');
 
   const { status, data } = useQuery({
@@ -65,7 +67,6 @@ export default function LikeButton({
     });
   }, [data]);
 
-
   const { isPending, mutate } = useMutation({
     mutationFn: async () => {
       const data: LikePost = {
@@ -88,6 +89,7 @@ export default function LikeButton({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.token}`,
           },
           body: JSON.stringify(data),
         });
@@ -118,6 +120,16 @@ export default function LikeButton({
         const _data: { likes: number } = data.message;
         setLike(_data.likes);
         setIsLiked(() => (actionRef.current === 'like' ? true : false));
+        return;
+      }
+
+      if (data.status === 401) {
+        Toast.show({
+          text1: 'Error',
+          text2: 'Unauthorized. Please login to like the post.',
+          type: 'error',
+        });
+        router.push('/sign-in');
         return;
       }
 
@@ -178,13 +190,13 @@ export default function LikeButton({
 
   return (
     <>
-      {status === "pending" ? (
+      {status === 'pending' ? (
         <Text>Loading...</Text>
       ) : (
-      <View className="flex-row items-center  ">
-        <Ionicons name="heart" size={32} color="red" onPress={handleLike} />
-        <Text className="text-white font-pmdedium text-[20px] text-center m-2 pb-1">{Likes}</Text>
-      </View>
+        <View className="flex-row items-center  ">
+          <Ionicons name="heart" size={32} color="red" onPress={handleLike} />
+          <Text className="text-white font-pmdedium text-[20px] text-center m-2 pb-1">{Likes}</Text>
+        </View>
       )}
     </>
   );

@@ -39,14 +39,11 @@ export async function POST(req: Request) {
           .select({ count: sql<number>`count(*)` })
           .from(usersLikePosts)
           .where(
-            and(
-              eq(usersLikePosts.user_id, data.userId),
-              eq(usersLikePosts.post_id, data.postId)
-            )
+            and(eq(usersLikePosts.user_id, data.userId), eq(usersLikePosts.post_id, data.postId))
           )
           .execute();
         if (isPostLiked[0].count > 0) {
-          return Response.json('Post already liked', { status: 409 })
+          return Response.json('Post already liked', { status: 409 });
         }
 
         /* like the post */
@@ -65,7 +62,7 @@ export async function POST(req: Request) {
           .where(eq(posts.id, data.postId))
           .returning({ likes: posts.likes_count })
           .execute();
-          return Response.json({ likes: res[0].likes }, { status: 201 });
+        return Response.json({ likes: res[0].likes }, { status: 201 });
       });
 
       const res = await likePost;
