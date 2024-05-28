@@ -1,8 +1,13 @@
 import { followLocationSchema } from '@/lib/zodSchema/followLocation';
 import { ZodError } from 'zod';
-import { followLocation, checkFollowLocation, unfollowLocation, getFollowedLocations } from '@/lib/db/actions';
+import { getFollowedLocations } from '@/lib/db/actions';
 import { authorize } from '@/lib/auth';
 import { ReturnFollowedLocation } from '@/lib/zodSchema/dbTypes';
+import { Pool } from '@neondatabase/serverless';
+import { getDbUrl } from '@/lib/secrets';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { and, eq, sql } from 'drizzle-orm';
+import { usersToLocations } from '@/lib/db/schema';
 
 export async function POST(req: Request) {
   const isAuth = authorize(req);
@@ -13,29 +18,84 @@ export async function POST(req: Request) {
 
   try {
     const data = followLocationSchema.parse(await req.json());
+    const pool = new Pool({ connectionString: getDbUrl() });
 
-    const hasFollowed: boolean = await checkFollowLocation(data);
+    try {
+      const db = drizzle(pool);
+      /* check if location is followed */
+      const toggleFollow = db.transaction(async (trx) => {
+        let hasFollowed: boolean = false;
+        try {
+          const checkFollowLocation = await trx
+            .select({ count: sql<number>`count(*)` })
+            .from(usersToLocations)
+            .where(
+              and(
+                eq(usersToLocations.userId, data.userId),
+                eq(usersToLocations.locationId, data.locationId)
+              )
+            )
+            .execute();
+  
+          hasFollowed = checkFollowLocation[0].count > 0;
+        } catch (error) {
+          console.error('Error in checking follow location', error);
+          throw new Error('Error in checking follow location: ' + error);
+        }
 
-    if (data.action === 'follow' && hasFollowed) {
-      return Response.json('User has already followed this location', {
-        status: 409,
+        /* if follow but already followed */
+        if (data.action === 'follow' && hasFollowed) {
+          return Response.json('User has already followed this location', {
+            status: 409,
+          });
+        }
+
+        /* if unfollow but not followed */
+        if (data.action === 'unfollow' && !hasFollowed) {
+          return Response.json('User has not followed this location', {
+            status: 409,
+          });
+        }
+
+        if (data.action === 'follow') {
+          try {
+            await trx
+              .insert(usersToLocations)
+              .values({
+                userId: data.userId,
+                locationId: data.locationId,
+              })
+              .execute();
+            return Response.json('Follow location success', { status: 201 });
+          } catch (error) {
+            console.error('Error in following location', error);
+            throw new Error('Error in following location: ' + error);
+          }
+        } else {
+          try {
+            await trx
+              .delete(usersToLocations)
+              .where(
+                and(
+                  eq(usersToLocations.userId, data.userId),
+                  eq(usersToLocations.locationId, data.locationId)
+                )
+              )
+              .execute();
+            return Response.json('Unfollow location success', { status: 201 });
+          } catch (error) {
+            console.error('Error in unfollowing location', error);
+            throw new Error('Error in unfollowing location: ' + error);
+          }
+        }
       });
-    }
-
-    if (data.action === 'unfollow' && !hasFollowed) {
-      return Response.json('User has not followed this location', {
-        status: 409,
-      });
-    }
-
-    if (data.action === 'follow') {
-      await followLocation(data);
-      return Response.json('Follow location success', { status: 201 });
-    }
-
-    if (data.action === 'unfollow') {
-      await unfollowLocation(data);
-      return Response.json('Unfollow location success', { status: 201 });
+      const res = await toggleFollow;
+      pool.end();
+      return res;
+    } catch (error) {
+      console.error('Error in liking post', error);
+      pool.end();
+      throw new Error('Error in liking post: ' + error);
     }
   } catch (error) {
     if (error instanceof ZodError) {

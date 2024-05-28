@@ -261,53 +261,6 @@ export const getLocation = async (id: string): Promise<ReturnLocation> => {
   }
 };
 
-export const checkFollowLocation = async (data: UsersToLocations) => {
-  try {
-    const { userId, locationId } = data;
-
-    const checkFollowLocation = db
-      .select({ count: sql<number>`count(*)` })
-      .from(usersToLocations)
-      .where(
-        and(
-          eq(usersToLocations.userId, sql.placeholder('userId')),
-          eq(usersToLocations.locationId, sql.placeholder('locationId'))
-        )
-      )
-      .prepare('check_follow_location');
-    const res = await checkFollowLocation.execute({ userId, locationId });
-    const count: number = res[0].count;
-    if (count > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    console.error(
-      `Error in checking if user:${data.userId} has followed location:${data.locationId}: ${error}`
-    );
-    throw new Error('Error in checking follow location: ' + error);
-  }
-};
-
-export const followLocation = async (data: UsersToLocations) => {
-  try {
-    const { userId, locationId } = data;
-
-    const followLocation = db
-      .insert(usersToLocations)
-      .values({
-        userId: sql.placeholder('userId'),
-        locationId: sql.placeholder('locationId'),
-      })
-      .prepare('follow_location');
-    await followLocation.execute({ userId, locationId });
-  } catch (error) {
-    console.error('Error in following location', error);
-    throw new Error('Error in following location: ' + error);
-  }
-};
-
 export const getFollowedLocations = async (
   userId: string
 ): Promise<Array<ReturnFollowedLocation>> => {
@@ -328,26 +281,6 @@ export const getFollowedLocations = async (
   } catch (error) {
     console.error('Error in getting followed locations: ', error);
     throw new Error(`Error in getting followed locations: ${error}`);
-  }
-};
-
-export const unfollowLocation = async (data: UsersToLocations) => {
-  try {
-    const { userId, locationId } = data;
-
-    const unfollowLocation = db
-      .delete(usersToLocations)
-      .where(
-        and(
-          eq(usersToLocations.userId, sql.placeholder('userId')),
-          eq(usersToLocations.locationId, sql.placeholder('locationId'))
-        )
-      )
-      .prepare('unfollow_location');
-    await unfollowLocation.execute({ userId, locationId });
-  } catch (error) {
-    console.error('Error in unfollowing location', error);
-    throw new Error('Error in unfollowing location: ' + error);
   }
 };
 
