@@ -1,7 +1,6 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image} from 'react-native';
 import React from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { SimpleLineIcons } from '@expo/vector-icons';
 import { images } from '@/constants';
 import handleRegisteredTime from '@/lib/utilities/handleRegisteredTime';
 import LikeButton from './LikeButton';
@@ -52,12 +51,6 @@ export default function FeedCard({
                 {handleRegisteredTime(registered_time)}
               </Text>
             </View>
-          </View>
-          <View className="absolute right-3 top-5">
-            <TouchableOpacity className="hover:text-gray-500">
-              <SimpleLineIcons name="user-follow" size={20} color="white" />
-              {/* <SimpleLineIcons name="user-following" size={20} color="white" /> */}
-            </TouchableOpacity>
           </View>
         </View>
         <View className="m-2">
