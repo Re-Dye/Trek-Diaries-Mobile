@@ -10,24 +10,17 @@ const SearchBar = ({ initialQuery }: { initialQuery: string }) => {
   const [query, setQuery] = useState(initialQuery || '');
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#000',
-        borderRadius: 15,
-        borderColor: '#333',
-        borderWidth: 2,
-      }}
-    >
+    <View className='flex-row justify-between items-center p-2 mx-3 bg-black-100 rounded-xl border-2 border-[#333]'>
+      <View>
       <TextInput
-        style={{ color: '#fff', flex: 1 }}
+        className='text-[#fff]'
         value={query}
         placeholder="Search a location"
         placeholderTextColor="#CDCDE0"
         onChangeText={setQuery}
       />
+      </View>
+      <View>
       <TouchableOpacity
         onPress={() => {
           if (query === '') {
@@ -45,8 +38,13 @@ const SearchBar = ({ initialQuery }: { initialQuery: string }) => {
           }
         }}
       >
-        <Image source={icons.search} style={{ width: 20, height: 20 }} resizeMode="contain" />
+        <Image 
+          source={icons.search} 
+          resizeMode="contain" 
+          className='w-5 h-5 '
+        />
       </TouchableOpacity>
+      </View>
     </View>
   );
 };
