@@ -67,7 +67,9 @@ const SearchResults = () => {
               <View className="flex m-3 bg-black-100 rounded-2xl">
                 <LocationCard address={location.address} description={location.description} />
                 <View className="flex-row gap-8 justify-center items-center mb-4">
-                  <FollowButton locationID={location.id} userId={session!.id} />
+                  <View>
+                    <FollowButton locationID={location.id} userId={session!.id} />
+                  </View>
                   <TouchableOpacity
                     onPress={() => router.push('/add/post')}
                     className="hover:text-gray-500 border-2 bg-primary px-4 py-2 border-green-500 rounded-xl flex-row items-center space-x-2"

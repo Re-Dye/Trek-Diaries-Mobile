@@ -100,16 +100,14 @@ export default function FollowButton({
         >
           <Text className="font-medium uppercase text-white">Follow</Text>
           <SimpleLineIcons name="user-follow" size={15} color="white" />
-          {/* <SimpleLineIcons name="user-following" size={20} color="white" /> */}
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
           onPress={() => handleToggleFollow('unfollow')}
           className="hover:text-gray-500 border-2 bg-primary px-4 py-2 border-green-500 rounded-xl flex-row items-center space-x-2"
         >
-          <Text className="font-medium uppercase text-white">Unfollow</Text>
-          <SimpleLineIcons name="user-follow" size={15} color="white" />
-          {/* <SimpleLineIcons name="user-following" size={20} color="white" /> */}
+          <Text className="font-medium uppercase text-white">Following</Text>
+          <SimpleLineIcons name="user-following" size={15} color="white" />
         </TouchableOpacity>
       )}
     </>
