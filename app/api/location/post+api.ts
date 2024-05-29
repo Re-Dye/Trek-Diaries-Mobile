@@ -49,9 +49,12 @@ export async function GET(req: Request) {
 
       const { posts, next } = await getPosts(locationId, limit, last);
 
-      return Response.json({ posts, next }, {
-        status: 200,
-      });
+      return Response.json(
+        { posts, next },
+        {
+          status: 200,
+        }
+      );
     }
   } catch (error) {
     console.error(error);

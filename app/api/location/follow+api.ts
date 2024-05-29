@@ -36,7 +36,7 @@ export async function POST(req: Request) {
               )
             )
             .execute();
-  
+
           hasFollowed = checkFollowLocation[0].count > 0;
         } catch (error) {
           console.error('Error in checking follow location', error);
@@ -108,22 +108,28 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
+  console.log('GET');
   const isAuth = authorize(req);
 
   if (!isAuth) {
     return Response.json('Unauthorized', { status: 401 });
   }
-
+  console.log('auhtorized');
   const params = new URL(req.url).searchParams;
+  console.log(params);
   const userId: string | null = params.get('userId');
+  console.log(userId);
 
-  if (!userId) {
+  if (!userId || userId.length === 0) {
+    console.log('Invalid Request');
     return Response.json('Invalid Request', { status: 400 });
   }
 
   try {
+    console.log('getFollowedLocations');
     const locations: Array<ReturnFollowedLocation> = await getFollowedLocations(userId);
 
+    console.log(locations);
     return Response.json(locations, { status: 200 });
   } catch (error) {
     console.error(error);

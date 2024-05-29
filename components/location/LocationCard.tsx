@@ -17,9 +17,7 @@ export default function LocationCard({
             <Entypo name="location" size={24} color="white" className="m" />
           </View>
           <View>
-            <Text className="text-white font-psemibold">
-              {address}
-            </Text>
+            <Text className="text-white font-psemibold">{address}</Text>
           </View>
         </View>
         <View className="m-2">
