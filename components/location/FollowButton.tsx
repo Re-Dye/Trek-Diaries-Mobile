@@ -39,7 +39,6 @@ export default function FollowButton({
     },
     onSuccess: async (data) => {
       if (data === undefined) {
-        console.log('Null data received');
         // toast({
         //   className:
         //     "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
@@ -49,12 +48,9 @@ export default function FollowButton({
         return;
       }
       if (data.status === 201) {
-        console.log('Location followed successfully, refetching locations');
         await queryClient.refetchQueries({ queryKey: ['locations'] });
-        console.log(data.message);
         return;
       } else if (data.status === 409) {
-        console.log(data.message);
         // toast({
         //   className:
         //     "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
@@ -62,7 +58,6 @@ export default function FollowButton({
         //   description: "You are already following this location",
         // });
       } else if (data.status === 400) {
-        console.log(data.message);
         // toast({
         //   className:
         //     "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
@@ -70,7 +65,6 @@ export default function FollowButton({
         //   description: "Please try again later with proper information.",
         // });
       } else {
-        console.log(data.message);
         // toast({
         //   variant: "destructive",
         //   className:

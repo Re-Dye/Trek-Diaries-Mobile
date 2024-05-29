@@ -13,7 +13,6 @@ export async function POST(req: Request) {
     // if (!(await isPostLiked(data))) {
     //   return Response.json("Post already disliked", { status: 409 });
     // }
-    console.log('disliking');
 
     const likes: number = await dislikePost(data);
     return Response.json({ likes }, { status: 201 });

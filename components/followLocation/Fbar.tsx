@@ -30,7 +30,6 @@ export default function Fbar() {
   useEffect(() => {
     if (status === 'success') {
       if (data === undefined) {
-        console.log('Null data received');
         Toast.show({
           type: 'error',
           text1: 'Error',
@@ -42,14 +41,12 @@ export default function Fbar() {
         setLocations(data.message);
         return;
       } else if (data.status === 400) {
-        console.log(data.message);
         Toast.show({
           type: 'error',
           text1: 'Invalid Request',
           text2: 'Please try again later with proper information.',
         });
       } else {
-        console.log(data.message);
         Toast.show({
           type: 'error',
           text1: 'Error',
@@ -67,7 +64,6 @@ export default function Fbar() {
       });
     }
   }, [status, data]);
-  console.log(locations);
   return (
     <View className="flex-column">
       {locations.map((location) => (
