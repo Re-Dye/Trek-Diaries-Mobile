@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -191,10 +191,15 @@ export default function LikeButton({
   return (
     <>
       {status === 'pending' ? (
-        <Text>Loading...</Text>
+        <ActivityIndicator size="small" color="#00ff00" className='flex justify-center items-center'/>
       ) : (
         <View className="flex-row items-center  ">
-          <Ionicons name="heart" size={32} color="red" onPress={handleLike} />
+          <Ionicons 
+            name="heart" 
+            size={32} 
+            color={isLiked? "red": "grey"} 
+            onPress={handleLike} 
+          />
           <Text className="text-white font-pmdedium text-[20px] text-center m-2 pb-1">{Likes}</Text>
         </View>
       )}

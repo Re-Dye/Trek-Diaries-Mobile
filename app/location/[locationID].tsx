@@ -1,6 +1,6 @@
 // app/search/[query].tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
@@ -61,7 +61,7 @@ const SearchResults = () => {
       <ScrollView>
         <View>
           {isPending || location === null ? (
-            <Text>Loading...</Text>
+            <ActivityIndicator size="large" color="#00ff00" className='flex justify-center items-center'/>
           ) : (
             <View>
               <View className="flex m-3 bg-black-100 rounded-2xl">

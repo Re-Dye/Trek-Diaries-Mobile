@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text } from 'react-native';
+import { ActivityIndicator, Text } from 'react-native';
 import FeedCard from '../commons/FeedCard/FeedCard';
 // import LoadingPost from '../LoadingPost/LoadingPost';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -69,7 +69,7 @@ export default function PostFeed({ userId }: { userId: string }) {
       {/* <Text className='text-base text-white'>Post Feed</Text> */}
       {status === 'pending' ? (
         // <LoadingPost />
-        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#00ff00" className='flex justify-center items-center'/>
       ) : status === 'error' ? (
         <Text>Something went wrong. Please try again later</Text>
       ) : (

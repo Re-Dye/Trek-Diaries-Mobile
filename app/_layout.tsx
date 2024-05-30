@@ -53,6 +53,8 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
         <Stack.Screen name="location/[locationID]" options={{ headerShown: false }} />
+        <Stack.Screen name="add/post" options={{ headerShown: false }} />
+        <Stack.Screen name="create/addlocation" options={{ headerShown: false }} />
       </Stack>
     </QueryClientProvider>
   );

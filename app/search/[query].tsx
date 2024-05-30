@@ -1,6 +1,6 @@
 // app/search/[query].tsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, ActivityIndicator } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import SearchCard from '@/components/search/SearchCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -50,10 +50,15 @@ const SearchResults = () => {
         <View>
           <View className="m-4">
             <Text className="text-white font-pmedium">Search Results for: {query}</Text>
+            <CustomButton
+              title="Add Location"
+              handlePress={() => router.push('/create/addlocation')}
+              containerStyles="w-full mt-5"
+            />
           </View>
           <View>
             {status === 'pending' ? (
-              <Text>Loading...</Text>
+              <ActivityIndicator size="large" color="#00ff00" className='flex justify-center items-center'/>
             ) : (
               locations.map((location) => (
                 <SearchCard
