@@ -55,6 +55,7 @@ export default function RootLayout() {
         <Stack.Screen name="location/[locationID]" options={{ headerShown: false }} />
         <Stack.Screen name="add/post" options={{ headerShown: false }} />
         <Stack.Screen name="create/addlocation" options={{ headerShown: false }} />
+        <Stack.Screen name="comment/addcomment" options={{ headerShown: false }} />
       </Stack>
     </QueryClientProvider>
   );

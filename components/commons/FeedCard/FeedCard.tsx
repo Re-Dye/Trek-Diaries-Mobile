@@ -1,9 +1,10 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { images } from '@/constants';
 import handleRegisteredTime from '@/lib/utilities/handleRegisteredTime';
 import LikeButton from './LikeButton';
+import { useRouter } from 'expo-router';
 
 interface Owner {
   id: string;
@@ -36,6 +37,7 @@ export default function FeedCard({
   owner: Owner;
   rating: number;
 }) {
+  const router = useRouter();
   return (
     <View>
       <View className="m-3 p-4 bg-black-100 rounded-2xl">
@@ -68,7 +70,11 @@ export default function FeedCard({
         </View>
         <View className="flex-row space-x-4 items-center justify-start my-2">
           <LikeButton likes={likes} postId={id} userId={userId} />
+          <TouchableOpacity
+            onPress={()=>router.push("/comment/addcomment")}
+          >
           <FontAwesome5 name="comment-alt" size={25} color="grey" />
+          </TouchableOpacity>
         </View>
       </View>
     </View>

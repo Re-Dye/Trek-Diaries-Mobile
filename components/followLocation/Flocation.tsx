@@ -10,10 +10,10 @@ export default function Flocation({ id, address }: { id: string; address: string
     router.push(`/location/${id}`);
   };
   return (
-    <View>
-      <TouchableOpacity onPress={handleClick}>
-        <FontAwesome6 name="location-dot" size={24} color="black" />
-        <Text className="text-black">{address}</Text>
+    <View className='flex-col'>
+      <TouchableOpacity onPress={handleClick} className='flex-row space-x-2 mt-4'>
+        <FontAwesome6 name="location-dot" size={24} color="red" />
+        <Text className="text-white font-semibold">{address}</Text>
       </TouchableOpacity>
     </View>
   );
