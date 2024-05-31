@@ -6,7 +6,6 @@ import { useRouter } from 'expo-router';
 
 export default function Flocation({ id, address }: { id: string; address: string }) {
   const router = useRouter();
-  console.log(address);
   const handleClick = () => {
     router.push(`/location/${id}`);
   };
