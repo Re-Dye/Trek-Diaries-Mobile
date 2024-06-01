@@ -15,6 +15,11 @@ import FollowButton from '@/components/location/FollowButton';
 const SearchResults = () => {
   const { locationID } = useLocalSearchParams();
   const { session } = useSessionStore();
+
+  if (!session || new Date() >= new Date(session.ein + session.iat)) {
+    return <Redirect href={'/sign-in'} />;
+  }
+  
   const [location, setLocation] = useState<ReturnLocation | null>(null);
   const { data, isPending } = useQuery({
     queryKey: ['search', locationID],

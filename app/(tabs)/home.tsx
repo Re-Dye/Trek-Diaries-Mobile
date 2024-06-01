@@ -10,7 +10,7 @@ export default function Home() {
   const { session } = useSessionStore();
 
   if (!session || new Date() >= new Date(session.ein + session.iat)) {
-    return <Redirect href={'/home'} />;
+    return <Redirect href={'/sign-in'} />;
   }
 
   return (

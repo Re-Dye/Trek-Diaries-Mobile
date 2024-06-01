@@ -15,6 +15,12 @@ import { useSessionStore } from '@/lib/zustand/session';
 
 export default function AddLocation() {
   const { session } = useSessionStore();
+
+  if (!session || new Date() >= new Date(session.ein + session.iat)) {
+    return <Redirect href={'/sign-in'} />;
+  }
+  
+  const { session } = useSessionStore();
   const { control, handleSubmit } = useForm({
     defaultValues: {
       place: '',

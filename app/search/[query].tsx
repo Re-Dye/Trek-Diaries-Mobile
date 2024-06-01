@@ -1,7 +1,7 @@
 // app/search/[query].tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, ActivityIndicator } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import SearchCard from '@/components/search/SearchCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '@/components/commons/CustomButton';
@@ -9,6 +9,7 @@ import ImagePick from '@/components/commons/ImagePicker';
 import SearchBar from '@/components/search/SearchBar';
 import { useQuery } from '@tanstack/react-query';
 import { getAlgoliaApiKey, getAlgoliaAppId, getAlgoliaIndexName } from '@/lib/secrets';
+import { useSessionStore } from '@/lib/zustand/session';
 
 type Location = {
   objectID: string;
@@ -18,6 +19,12 @@ type Location = {
 };
 
 const SearchResults = () => {
+  const { session } = useSessionStore();
+
+  if (!session || new Date() >= new Date(session.ein + session.iat)) {
+    return <Redirect href={'/sign-in'} />;
+  }
+  
   const { query } = useLocalSearchParams();
   const [locations, setLocations] = useState<Location[]>([]);
   const { refetch, status } = useQuery({

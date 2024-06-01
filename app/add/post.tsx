@@ -3,9 +3,16 @@ import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImagePick from '../../components/commons/ImagePicker';
 import CustomButton from '../../components/commons/CustomButton';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
+import { useSessionStore } from '@/lib/zustand/session';
 
 export default function Create() {
+  const { session } = useSessionStore();
+
+  if (!session || new Date() >= new Date(session.ein + session.iat)) {
+    return <Redirect href={'/sign-in'} />;
+  }
+  
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>

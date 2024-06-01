@@ -14,31 +14,29 @@ export default function Profile() {
   const { session } = useSessionStore();
 
   if (!session || new Date() >= new Date(session.ein + session.iat)) {
-    return <Redirect href={'/profile'} />;
+    return <Redirect href={'/sign-in'} />;
   }
 
-  const handleLogout = () => {
-    (async () => {
-      await setStorageItemAsync('session', null);
-      clearSession();
-      router.push('/(auth)/sign-in');
-    })();
+  const handleLogout = async () => {
+    await setStorageItemAsync('session', null);
+    clearSession();
+    router.push('/sign-in');
   };
 
   return (
     <SafeAreaView className="bg-primary h-full">
-    <ScrollView>
-    <View className='min-h-[60vh] p-3 justify-center'>
-      <View className='flex-row justify-center items-center space-x-2'>
-        <Text className='text-2xl font-bold text-sky-400'>Followed Locations</Text>
-        <FontAwesome6 name="magnifying-glass-location" size={24} color="pink" />
-      </View>
-      <View className='mt-5'>{session && <Fbar />}</View>
-      <View>
-        <CustomButton title="Logout" handlePress={handleLogout} containerStyles="mt-8" />
-      </View>
-    </View>
-    </ScrollView>
+      <ScrollView>
+        <View className="min-h-[60vh] p-3 justify-center">
+          <View className="flex-row justify-center items-center space-x-2">
+            <Text className="text-2xl font-bold text-sky-400">Followed Locations</Text>
+            <FontAwesome6 name="magnifying-glass-location" size={24} color="pink" />
+          </View>
+          <View className="mt-5">{session && <Fbar />}</View>
+          <View>
+            <CustomButton title="Logout" handlePress={handleLogout} containerStyles="mt-8" />
+          </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
