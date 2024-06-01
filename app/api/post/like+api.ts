@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         }
 
         /* check if post is already liked */
-        const isPostLiked = await db
+        const isPostLiked = await trx
           .select({ count: sql<number>`count(*)` })
           .from(usersLikePosts)
           .where(
