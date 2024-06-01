@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../../constants';
 import Forms from '../../components/commons/Forms';
 import CustomButton from '../../components/commons/CustomButton';
-import { Link, useRouter } from 'expo-router';
+import { Link, Redirect, useRouter } from 'expo-router';
 import { useMutation } from '@tanstack/react-query';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,8 +19,7 @@ export default function AddLocation() {
   if (!session || new Date() >= new Date(session.ein + session.iat)) {
     return <Redirect href={'/sign-in'} />;
   }
-  
-  const { session } = useSessionStore();
+
   const { control, handleSubmit } = useForm({
     defaultValues: {
       place: '',
