@@ -1,13 +1,15 @@
 import { View, Text, SafeAreaView, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Forms from '@/components/commons/Forms';
 import CustomButton from '@/components/commons/CustomButton';
-import { Redirect, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useSessionStore } from '@/lib/zustand/session';
 
 export default function AddComment() {
   const { session } = useSessionStore();
+  
+  const { postID } = useLocalSearchParams();
 
   if (!session || new Date() >= new Date(session.ein + session.iat)) {
     return <Redirect href={'/sign-in'} />;
@@ -19,6 +21,10 @@ export default function AddComment() {
       comment: '',
     },
   });
+  useEffect(() => {
+    console.log(postID);
+    console.log(session?.id);
+  }, []);
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
