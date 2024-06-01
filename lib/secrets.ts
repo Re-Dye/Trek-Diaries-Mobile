@@ -131,3 +131,24 @@ export const getWebsiteUrl = (): string => {
 
   return secret;
 };
+
+
+export const getAzureRecommendationApiUrl = (): string => {
+  const secret = process.env.AZURE_RECOMMENDATION_API_URL;
+
+  if (!secret || secret.length === 0) {
+    throw new Error('The environment variable AZURE_RECOMMENDATION_API_URL is not set.');
+  }
+
+  return secret;
+};
+
+export const getAzureSecret = (): string => {
+  const secret = process.env.AZURE_SECRET;
+
+  if (!secret || secret.length === 0) {
+    throw new Error('The environment variable AZURE_SECRET is not set.');
+  }
+
+  return secret;
+};
