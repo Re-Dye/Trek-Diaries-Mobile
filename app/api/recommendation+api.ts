@@ -17,9 +17,7 @@ export async function GET(req: Request) {
       return Response.json('Preference or user not found', { status: 404 });
     }
   
-    // get recommendation from preference
     const apiUrl = new URL(getAzureRecommendationApiUrl());
-    // const apiUrl = new URLSearchParams(getAzureRecommendationApiUrl());
     apiUrl.searchParams.append('code', getAzureSecret());
     apiUrl.searchParams.append('trail_name', preference.trail);
   
