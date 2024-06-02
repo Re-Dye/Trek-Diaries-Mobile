@@ -21,10 +21,7 @@ export default function AddComment() {
       comment: '',
     },
   });
-  useEffect(() => {
-    console.log(postID);
-    console.log(session?.id);
-  }, []);
+  
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
