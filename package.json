@@ -10,7 +10,9 @@
     "format": "prettier . --write",
     "migrations:generate": "drizzle-kit generate:pg",
     "migrations:push": "tsx migrate.ts",
-    "migrations:drop": "drizzle-kit drop --config=drizzle.config.ts"
+    "migrations:drop": "drizzle-kit drop --config=drizzle.config.ts",
+    "migrations:pull": "drizzle-kit introspect",
+    "studio": "drizzle-kit studio --port 3000"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
