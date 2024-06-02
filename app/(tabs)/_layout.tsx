@@ -6,7 +6,7 @@ import { useSessionStore } from '@/lib/zustand/session';
 import { useLocationStore } from '@/lib/zustand/location';
 import { useQuery } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
-
+import { MaterialIcons } from '@expo/vector-icons';
 const TabIcon = ({
   icon,
   color,
@@ -119,6 +119,18 @@ export default function TabsLayout() {
             ),
           }}
         />
+
+        <Tabs.Screen
+          name="explore"
+          options={{
+            title: 'Explore',
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon icon={icons.explore} color={color} name="Explore" focused={focused} />
+            ),
+          }}
+        />
+
         <Tabs.Screen
           name="profile"
           options={{

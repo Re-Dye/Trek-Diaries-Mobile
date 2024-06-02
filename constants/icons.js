@@ -13,6 +13,7 @@ import eye from '../assets/icons/eye.png';
 import play from '../assets/icons/play.png';
 import addImage from '../assets/icons/addimage.png';
 import closeImage from '../assets/icons/delete.png';
+import explore from '../assets/icons/explore.png';
 
 export default {
   play,
@@ -30,4 +31,5 @@ export default {
   eye,
   addImage,
   closeImage,
+  explore,
 };
