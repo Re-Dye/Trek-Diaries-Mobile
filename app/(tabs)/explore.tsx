@@ -68,8 +68,9 @@ export default function Explore() {
             <Text>Loading...</Text>
           ) : (
             session &&
+            !isPending &&
             locations?.json &&
-            !isPending && <ExploreFeed userId={session.id} locations={locations.json.recommended_locations} />
+            <ExploreFeed userId={session.id} locations={locations.json.recommended_locations} />
           )}
         </View>
       </ScrollView>

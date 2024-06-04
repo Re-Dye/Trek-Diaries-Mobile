@@ -25,10 +25,10 @@ export default function ExploreFeed({
   const { session } = useSessionStore();
 
   const { data, status, fetchNextPage } = useInfiniteQuery<Response, Error>({
+    enabled: userId !== undefined && locations.length > 0,
     queryKey: ['recommendation', 'feed', userId],
     queryFn: async ({ pageParam = '00000000-0000-0000-0000-000000000000' }) => {
       const searchParams = new URLSearchParams({
-        userId,
         location: JSON.stringify(locations),
         limit: CONSTANTS.POSTS_PER_SCROLL.toString(),
         last: pageParam as string | "",
