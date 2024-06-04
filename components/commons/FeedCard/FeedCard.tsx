@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { images } from '@/constants';
 import handleRegisteredTime from '@/lib/utilities/handleRegisteredTime';
@@ -70,9 +70,8 @@ export default function FeedCard({
         </View>
         <View className="flex-row space-x-4 items-center justify-start my-2">
           <LikeButton likes={likes} postId={id} userId={userId} />
-          <TouchableOpacity 
-            onPress={() => router.push(`/post/${id}`)}>
-          <FontAwesome5 name="comment-alt" size={25} color="grey" />
+          <TouchableOpacity onPress={() => router.push(`/post/${id}`)}>
+            <FontAwesome5 name="comment-alt" size={25} color="grey" />
           </TouchableOpacity>
         </View>
       </View>

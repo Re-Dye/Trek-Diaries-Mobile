@@ -9,11 +9,11 @@ import { posts, comments } from '@/lib/db/schema';
 import { authorize } from '@/lib/auth';
 
 export async function POST(req: Request) {
-  // const isAuthorized = authorize(req);
+  const isAuthorized = authorize(req);
 
-  // if (!isAuthorized) {
-  //   return Response.json('Unauthorized', { status: 401 });
-  // }
+  if (!isAuthorized) {
+    return Response.json('Unauthorized', { status: 401 });
+  }
 
   try {
     const data: addCommentFormData = addCommentFormSchema.parse(await req.json());
