@@ -63,8 +63,6 @@ export default function ViewPost({ postID }: { postID: string }) {
 
   return (
     // <Text> HI</Text>
-    <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
         <View className="mt-5 p-4 rounded-2xl">
           <View className="flex-row items-center mt-4 gap-5 p-2 relative">
             <View>
@@ -111,7 +109,5 @@ export default function ViewPost({ postID }: { postID: string }) {
             </View>
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
   );
 }

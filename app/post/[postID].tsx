@@ -36,13 +36,11 @@ export default function Post() {
     // <Text> HI</Text>
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
-        <View className="flex-col">
-          <View>
-            <ViewPost postID={validPostID} />
-          </View>
-          <View>
-            <AddComment postID={validPostID} userId={session.id} />
-          </View>
+        <View>
+          <ViewPost postID={validPostID} />
+        </View>
+        <View>
+          <AddComment postID={validPostID} userId={session.id} />
         </View>
       </ScrollView>
     </SafeAreaView>

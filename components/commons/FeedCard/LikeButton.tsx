@@ -191,15 +191,14 @@ export default function LikeButton({
   return (
     <>
       {status === 'pending' ? (
-        <ActivityIndicator size="small" color="#00ff00" className='flex justify-center items-center'/>
+        <ActivityIndicator
+          size="small"
+          color="#00ff00"
+          className="flex justify-center items-center"
+        />
       ) : (
         <View className="flex-row items-center  ">
-          <Ionicons 
-            name="heart" 
-            size={32} 
-            color={isLiked? "red": "grey"} 
-            onPress={handleLike} 
-          />
+          <Ionicons name="heart" size={32} color={isLiked ? 'red' : 'grey'} onPress={handleLike} />
           <Text className="text-white font-pmdedium text-[20px] text-center m-2 pb-1">{Likes}</Text>
         </View>
       )}

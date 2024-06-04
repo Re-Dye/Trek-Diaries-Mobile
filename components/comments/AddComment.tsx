@@ -64,7 +64,7 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
   const handleAddComment: SubmitHandler<addCommentFormData> = (data) => mutate(data);
 
   return (
-    <View className="w-full justify-center min-h-[85vh] px-5">
+    <View className="w-full mt-4 px-5">
       <Text className="text-2xl text-white font-psemibold">Comments</Text>
       <Controller
         control={control}
@@ -85,7 +85,7 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
           </>
         )}
       />
-      <View className="flex-row justify-around">
+      {/* <View className="flex-row justify-around">
         <CustomButton
           title="cancel"
           handlePress={() => router.push('/(tabs)/home')}
@@ -98,6 +98,18 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
           containerStyles="mt-7 w-[150px]"
           // isLoading={isPending}
         />
+      </View> */}
+      <View className="flex-row justify-around">
+        <TouchableOpacity onPress={() => router.push('/(tabs)/home')}>
+          <View className="m-4 flex-row items-center justify-center h-[40px] w-[150px] bg-blue-600 rounded-xl ">
+            <Text className="text-white font-psemibold">Back</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSubmit(handleAddComment)}>
+          <View className="m-4 flex-row items-center justify-center h-[40px] w-[150px] bg-green-600 rounded-xl ">
+            <Text className="text-white font-psemibold">Comment</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
