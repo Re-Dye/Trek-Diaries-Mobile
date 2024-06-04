@@ -10,7 +10,7 @@ import { images } from '@/constants';
 import CommentCard from '@/components/comments/CommentCard';
 import Star from '@/components/comments/rating';
 
-export default function AddComment({
+export default function ViewPost({
   userId,
   address,
   locationId,
