@@ -11,7 +11,7 @@ import { addCommentFormData, addCommentFormSchema } from '@/lib/zodSchema/addCom
 import { ReturnLocation, selectLocationSchema } from '@/lib/zodSchema/dbTypes';
 import { useSessionStore } from '@/lib/zustand/session';
 
-export default function AddComment() {
+export function AddComment() {
   const { session } = useSessionStore();
   const { postID } = useLocalSearchParams();
   useEffect(() => {
