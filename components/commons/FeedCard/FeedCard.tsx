@@ -70,10 +70,8 @@ export default function FeedCard({
         </View>
         <View className="flex-row space-x-4 items-center justify-start my-2">
           <LikeButton likes={likes} postId={id} userId={userId} />
-          <TouchableOpacity
-            onPress={()=>router.push("/comment/addcomment")}
-          >
-          <FontAwesome5 name="comment-alt" size={25} color="grey" />
+          <TouchableOpacity onPress={() => router.push(`/post/${id}`)}>
+            <FontAwesome5 name="comment-alt" size={25} color="grey" />
           </TouchableOpacity>
         </View>
       </View>
