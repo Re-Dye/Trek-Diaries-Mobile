@@ -11,7 +11,7 @@ import { addCommentFormData, addCommentFormSchema } from '@/lib/zodSchema/addCom
 import { ReturnLocation, selectLocationSchema } from '@/lib/zodSchema/dbTypes';
 import { useSessionStore } from '@/lib/zustand/session';
 
-export function AddComment() {
+void function AddComment() {
   const { session } = useSessionStore();
   const { postID } = useLocalSearchParams();
   useEffect(() => {
@@ -123,4 +123,4 @@ export function AddComment() {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
