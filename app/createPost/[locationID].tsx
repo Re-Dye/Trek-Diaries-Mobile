@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '../../components/commons/CustomButton';
@@ -9,18 +9,16 @@ import * as ImagePicker from 'expo-image-picker';
 import { icons } from '../../constants';
 import { getCloudinaryPresetName, getCloudinaryName } from '@/lib/secrets';
 import * as AddPost from '@/lib/zodSchema/addPost';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler, UseFormSetValue } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Forms from '../../components/commons/Forms';
-import { InsertPost } from '@/lib/zodSchema/dbTypes';
 import { ConsoleLogWriter } from 'drizzle-orm';
 
-export default function Create() {
+export default function CreatePost() {
   const { session } = useSessionStore();
   if (!session || new Date() >= new Date(session.ein + session.iat)) {
     return <Redirect href={'/sign-in'} />;
   }
-
   const { location_id } = useLocalSearchParams();
   let validLocationID = '';
   if (typeof location_id === 'string') {
@@ -28,13 +26,15 @@ export default function Create() {
   } else if (Array.isArray(location_id) && location_id.length > 0) {
     validLocationID = location_id[0]; // join the array
   } else {
-    // Handle the case when postID is undefined or an empty array
-    validLocationID = '0d16715b-b275-49c7-9c6e-db46c470458b'; // Provide a default or fallback postID
+    // Handle the case when location_id is undefined or an empty array
+    validLocationID = '0d16715b-b275-49c7-9c6e-db46c470458b'; // Provide a default or fallback location_id
   }
+
   useEffect(() => {
     console.log(validLocationID);
   }, []);
-  const { control, handleSubmit } = useForm({
+
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues: {
       description: '',
       trail_condition: 0,
@@ -194,7 +194,7 @@ export default function Create() {
             // isLoading={isPending}
           />
           <View>
-            <ImagePick />
+            <ImagePick setValue={setValue} />
           </View>
         </View>
       </ScrollView>
@@ -202,7 +202,11 @@ export default function Create() {
   );
 }
 
-export function ImagePick() {
+type ImagePickProps = {
+  setValue: UseFormSetValue<AddPost.AddPostRequestData>;
+};
+
+function ImagePick({ setValue }: ImagePickProps) {
   const [image, setImage] = useState<string | null>(null);
   const [imageLink, setImageLink] = useState<string | null>(null);
 
@@ -234,6 +238,7 @@ export function ImagePick() {
         .then(async (r) => {
           let data = await r.json();
           setImageLink(data.url);
+          setValue('image_url', data.url); // Update image_url field in useForm
         })
         .catch((err) => console.log(err));
     }
@@ -245,6 +250,7 @@ export function ImagePick() {
 
   const removeImage = () => {
     setImage(null);
+    setValue('image_url', ''); // Clear the image_url field in useForm
   };
 
   return (

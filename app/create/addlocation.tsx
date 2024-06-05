@@ -27,18 +27,18 @@ export default function AddLocation() {
       country: '',
       description: '',
     },
-    resolver: zodResolver(AddLocationFormSchema)
+    resolver: zodResolver(AddLocationFormSchema),
   });
 
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: AddLocationFormData) => {
-      const res = await fetch("/api/location/add", {
-        method: "POST",
+      const res = await fetch('/api/location/add', {
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${ session?.token }`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
@@ -58,7 +58,7 @@ export default function AddLocation() {
       }
 
       if (data.status === 409) {
-        alert("Location already exists.");
+        alert('Location already exists.');
         // toast({
         //   className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
         //   description: "Location already exists."
@@ -67,7 +67,7 @@ export default function AddLocation() {
       }
 
       if (data.status === 400) {
-        alert("Invalid Request");
+        alert('Invalid Request');
         // toast({
         //   className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
         //   title: "Invalid Request",
@@ -75,7 +75,7 @@ export default function AddLocation() {
         // })
         return;
       }
-      alert("Error occured while adding location. Please try again later.");
+      alert('Error occured while adding location. Please try again later.');
       // toast({
       //   variant: "destructive",
       //   className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
@@ -91,7 +91,7 @@ export default function AddLocation() {
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View className="w-full justify-center min-h-[85vh] px-5 my-6">
-          <View className='flex-row justify-center items-center space-x-3'>
+          <View className="flex-row justify-center items-center space-x-3">
             <Text className="text-2xl text-white font-psemibold">Add Location</Text>
             <FontAwesome6 name="location-crosshairs" size={24} color="green" />
           </View>
@@ -184,5 +184,5 @@ export default function AddLocation() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
