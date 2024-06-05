@@ -13,6 +13,7 @@ import { useForm, Controller, SubmitHandler, UseFormSetValue } from 'react-hook-
 import { zodResolver } from '@hookform/resolvers/zod';
 import Forms from '../../components/commons/Forms';
 import { ConsoleLogWriter } from 'drizzle-orm';
+import { AddPostRequestData } from '@/lib/zodSchema/addPost';
 
 export default function CreatePost() {
   const { session } = useSessionStore();
@@ -30,10 +31,6 @@ export default function CreatePost() {
     validLocationID = '0d16715b-b275-49c7-9c6e-db46c470458b'; // Provide a default or fallback location_id
   }
 
-  useEffect(() => {
-    console.log(validLocationID);
-  }, []);
-
   const { control, handleSubmit, setValue } = useForm({
     defaultValues: {
       description: '',
@@ -47,9 +44,9 @@ export default function CreatePost() {
     resolver: zodResolver(AddPost.addPostRequestSchema),
   });
 
-  const handleAddPost: SubmitHandler<AddPost.AddPostRequestData> = (data) => {
-    console.log(data.accessibility);
-    console.log('inside submit handler...');
+  const handleAddPost: SubmitHandler<AddPostRequestData> = (data) => {
+    console.log(data.image_url);
+    console.log(validLocationID);
   };
 
   return (
@@ -62,9 +59,10 @@ export default function CreatePost() {
               title="Create Post"
               containerStyles="min-h-[35px] w-[120px] px-2 mr-2 rounded-2xl"
               textStyles="text-sm font-medium text-white"
-              handlePress={() => router.push('/home')}
+              handlePress={handleSubmit(handleAddPost)}
             />
           </View>
+          <View>
           <Controller
             control={control}
             name={'description'}
@@ -85,6 +83,8 @@ export default function CreatePost() {
               </>
             )}
           />
+          </View>
+          <View>
           <Controller
             control={control}
             name="trail_condition"
@@ -119,6 +119,8 @@ export default function CreatePost() {
               </>
             )}
           />
+          </View>
+          <View>
           <Controller
             control={control}
             name="weather"
@@ -153,6 +155,8 @@ export default function CreatePost() {
               </>
             )}
           />
+          </View>
+          <View>
           <Controller
             control={control}
             name="accessibility"
@@ -187,12 +191,7 @@ export default function CreatePost() {
               </>
             )}
           />
-          <CustomButton
-            title="Submit"
-            handlePress={handleSubmit(handleAddPost)}
-            containerStyles="mt-7"
-            // isLoading={isPending}
-          />
+          </View>
           <View>
             <ImagePick setValue={setValue} />
           </View>
