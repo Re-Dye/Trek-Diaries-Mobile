@@ -88,6 +88,18 @@ export const getCloudinaryName = (): string => {
   return secret;
 };
 
+export const getCloudinaryPresetName = (): string => {
+  const secret = process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET_NAME;
+
+  if (!secret || secret.length === 0) {
+    throw new Error(
+      'The environment variable EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET_NAME is not set.'
+    );
+  }
+
+  return secret;
+};
+
 export const getCloudinaryApiKey = (): string => {
   const secret = process.env.EXPO_PUBLIC_CLOUDINARY_API_KEY;
 
@@ -131,7 +143,6 @@ export const getWebsiteUrl = (): string => {
 
   return secret;
 };
-
 
 export const getAzureRecommendationApiUrl = (): string => {
   const secret = process.env.AZURE_RECOMMENDATION_API_URL;

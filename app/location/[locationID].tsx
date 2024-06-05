@@ -19,7 +19,7 @@ const SearchResults = () => {
   if (!session || new Date() >= new Date(session.ein + session.iat)) {
     return <Redirect href={'/sign-in'} />;
   }
-  
+
   const [location, setLocation] = useState<ReturnLocation | null>(null);
   const { data, isPending } = useQuery({
     queryKey: ['search', locationID],
@@ -66,7 +66,11 @@ const SearchResults = () => {
       <ScrollView>
         <View>
           {isPending || location === null ? (
-            <ActivityIndicator size="large" color="#00ff00" className='flex justify-center items-center'/>
+            <ActivityIndicator
+              size="large"
+              color="#00ff00"
+              className="flex justify-center items-center"
+            />
           ) : (
             <View>
               <View className="flex m-3 bg-black-100 rounded-2xl">
@@ -76,7 +80,7 @@ const SearchResults = () => {
                     <FollowButton locationID={location.id} userId={session!.id} />
                   </View>
                   <TouchableOpacity
-                    onPress={() => router.push('/add/post')}
+                    onPress={() => router.push(`/add/post`)}
                     className="hover:text-gray-500 border-2 bg-primary px-4 py-2 border-green-500 rounded-xl flex-row items-center space-x-2"
                   >
                     <Text className="font-medium uppercase text-white">Add Post</Text>
