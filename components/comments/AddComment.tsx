@@ -44,7 +44,8 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
     },
     onSuccess: (data) => {
       if (data.status === 201) {
-        console.log('added comments');
+        console.log(`comments from: ${userId}, on post: ${postID}`);
+        console.log(`content: ${data}`);
         return;
       }
 
@@ -61,7 +62,9 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
     },
   });
 
-  const handleAddComment: SubmitHandler<addCommentFormData> = (data) => mutate(data);
+  const handleAddComment: SubmitHandler<addCommentFormData> = (data) => {
+    mutate(data); // Call mutate here to execute the mutation
+  };
 
   return (
     <View className="w-full mt-4 px-5">
@@ -85,27 +88,13 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
           </>
         )}
       />
-      {/* <View className="flex-row justify-around">
-        <CustomButton
-          title="cancel"
-          handlePress={() => router.push('/(tabs)/home')}
-          containerStyles="mt-7 w-[150px] bg-sky-600"
-          // isLoading={isPending}
-        />
-        <CustomButton
-          title="comment"
-          handlePress={handleSubmit(handleAddComment)}
-          containerStyles="mt-7 w-[150px]"
-          // isLoading={isPending}
-        />
-      </View> */}
       <View className="flex-row justify-around">
         <TouchableOpacity onPress={() => router.push('/(tabs)/home')}>
           <View className="m-4 flex-row items-center justify-center h-[40px] w-[150px] bg-blue-600 rounded-xl ">
             <Text className="text-white font-psemibold">Back</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleSubmit(handleAddComment)}>
+        <TouchableOpacity onPress={handleSubmit(handleAddComment)}>
           <View className="m-4 flex-row items-center justify-center h-[40px] w-[150px] bg-green-600 rounded-xl ">
             <Text className="text-white font-psemibold">Comment</Text>
           </View>
