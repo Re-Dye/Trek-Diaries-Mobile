@@ -12,6 +12,7 @@ import ViewPost from '@/components/post/viewPost';
 import { ReturnComment } from '@/lib/zodSchema/dbTypes';
 import { CONSTANTS } from '@/lib/constants';
 import { router } from 'expo-router';
+import { IOScrollView, InView } from 'react-native-intersection-observer';
 
 interface Response {
   comments: Array<ReturnComment>;
@@ -31,7 +32,7 @@ export default function Post() {
     queryKey: ['comments', 'feed', postID as string],
     queryFn: async ({ pageParam = '00000000-0000-0000-0000-000000000000' }) => {
       const res = await fetch(
-        `/api/post/comment?postId=${postID as string}&last=${pageParam}&limit=${CONSTANTS.COMMENTS_PER_SCROLL}`,
+        `/api/post/comment?postId=${postID as string}&limit=${CONSTANTS.COMMENTS_PER_SCROLL}&last=${pageParam}`,
         {
           method: 'GET',
           headers: {
@@ -40,6 +41,7 @@ export default function Post() {
         }
       );
       if (res.status === 200) {
+        // console.log(res);
         return res.json();
       } else if (res.status === 400) {
         Toast.show({
@@ -76,12 +78,9 @@ export default function Post() {
   return (
     // <Text> HI</Text>
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
+      <IOScrollView>
         <View>
           <ViewPost postID={postID as string} />
-        </View>
-        <View>
-          <AddComment postID={postID as string} userId={session.id} />
         </View>
         {/* <Text className='text-base text-white'>Post Feed</Text> */}
         {status === 'pending' ? (
@@ -112,14 +111,20 @@ export default function Post() {
               return page.comments.map((comment, i) => (
                 <CommentCard
                   content={comment.content}
-                  owner={comment.user_id}
+                  owner={comment.user_name}
                   registeredTime={comment.registered_time}
                 />
               ));
             }
           })
         )}
-      </ScrollView>
+        <InView onChange={(inView: boolean) => setInView(inView)}>
+          <Text> </Text>
+        </InView>
+      </IOScrollView>
+      <View>
+        <AddComment postID={postID as string} userId={session.id} />
+      </View>
     </SafeAreaView>
   );
 }

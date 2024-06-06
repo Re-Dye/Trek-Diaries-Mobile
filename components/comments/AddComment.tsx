@@ -4,7 +4,7 @@ import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import CustomButton from '@/components/commons/CustomButton';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Forms from '@/components/commons/Forms';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addCommentFormData, addCommentFormSchema } from '@/lib/zodSchema/addComment';
 import { useSessionStore } from '@/lib/zustand/session';
@@ -15,7 +15,8 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
     console.log('the user id is: ', userId, 'the post id is: ', postID);
   }, []);
   const router = useRouter();
-  const { control, handleSubmit } = useForm({
+  const queryClient = useQueryClient();
+  const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       post_id: postID?.toString() || '',
       content: '',
@@ -44,8 +45,8 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
     },
     onSuccess: (data) => {
       if (data.status === 201) {
-        console.log(`comments from: ${userId}, on post: ${postID}`);
-        console.log(`content: ${data}`);
+        queryClient.invalidateQueries({ queryKey: ['comments', 'feed', postID] });
+        reset(); // Reset the form values
         return;
       }
 
