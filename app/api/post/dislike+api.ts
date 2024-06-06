@@ -44,26 +44,26 @@ export async function POST(req: Request) {
           return Response.json('Post already liked', { status: 409 });
         }
 
-         /* dislike the post */
-         await trx
-        .delete(usersLikePosts)
-        .where(
-          and(eq(usersLikePosts.user_id, data.userId), eq(usersLikePosts.post_id, data.postId))
-        )
-        .execute();
-      const res: { likes: number }[] = await trx
-        .update(posts)
-        .set({
-          likes_count: sql<number>`${posts.likes_count} - 1`,
-        })
-        .where(eq(posts.id, data.postId))
-        .returning({ likes: posts.likes_count })
-        .execute();
+        /* dislike the post */
+        await trx
+          .delete(usersLikePosts)
+          .where(
+            and(eq(usersLikePosts.user_id, data.userId), eq(usersLikePosts.post_id, data.postId))
+          )
+          .execute();
+        const res: { likes: number }[] = await trx
+          .update(posts)
+          .set({
+            likes_count: sql<number>`${posts.likes_count} - 1`,
+          })
+          .where(eq(posts.id, data.postId))
+          .returning({ likes: posts.likes_count })
+          .execute();
         return Response.json({ likes: res[0].likes }, { status: 201 });
-    });
-    const likes = await dislikePost;
-    pool.end();
-    return likes;
+      });
+      const likes = await dislikePost;
+      pool.end();
+      return likes;
     } catch (error) {
       console.error('Error in liking post', error);
       pool.end();

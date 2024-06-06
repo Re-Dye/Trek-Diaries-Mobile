@@ -7,12 +7,14 @@ export default function CustomButton({
   containerStyles,
   textStyles,
   isLoading,
+  disabled,
 }: {
   title: string;
   handlePress: () => void;
   containerStyles?: string;
   textStyles?: string;
   isLoading?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <TouchableOpacity
@@ -21,7 +23,7 @@ export default function CustomButton({
       className={`bg-green-500 rounded-xl justify-center items-center min-h-[62px] ${containerStyles} ${
         isLoading ? 'opacity-50' : ''
       }`}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
     >
       <Text className={`text-primary font-psemibold text-lg ${textStyles}`}>{title}</Text>
     </TouchableOpacity>

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '../../components/commons/CustomButton';
@@ -12,45 +12,78 @@ import * as AddPost from '@/lib/zodSchema/addPost';
 import { useForm, Controller, SubmitHandler, UseFormSetValue } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Forms from '../../components/commons/Forms';
-import { ConsoleLogWriter } from 'drizzle-orm';
+import { useMutation } from '@tanstack/react-query';
 
 export default function CreatePost() {
   const { session } = useSessionStore();
   if (!session || new Date() >= new Date(session.ein + session.iat)) {
     return <Redirect href={'/sign-in'} />;
   }
-  const { location_id } = useLocalSearchParams();
-  let validLocationID = '';
-  if (typeof location_id === 'string') {
-    validLocationID = location_id;
-  } else if (Array.isArray(location_id) && location_id.length > 0) {
-    validLocationID = location_id[0]; // join the array
-  } else {
-    // Handle the case when location_id is undefined or an empty array
-    validLocationID = '0d16715b-b275-49c7-9c6e-db46c470458b'; // Provide a default or fallback location_id
-  }
+  const { location } = useLocalSearchParams();
 
   useEffect(() => {
-    console.log(validLocationID);
+    console.log(location);
   }, []);
 
-  const { control, handleSubmit, setValue } = useForm({
+  const { control, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       description: '',
       trail_condition: 0,
       weather: 0,
       accessibility: 0,
-      image_url: '',
-      location_id: validLocationID,
-      owner_id: session.id,
+      image: '',
     },
-    resolver: zodResolver(AddPost.addPostRequestSchema),
+    resolver: zodResolver(AddPost.addPostFormSchema),
   });
 
-  const handleAddPost: SubmitHandler<AddPost.AddPostRequestData> = (data) => {
-    console.log(data.accessibility);
-    console.log('inside submit handler...');
-  };
+  const imageValue = watch('image'); // Watch the image value
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: AddPost.AddPostFormData) => {
+      const req: AddPost.AddPostRequestData = {
+        accessibility: data.accessibility,
+        description: data.description,
+        image_url: data.image,
+        location_id: location as string,
+        owner_id: session.id,
+        trail_condition: data.trail_condition,
+        weather: data.weather,
+      };
+      const res = await fetch('/api/location/post', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req),
+      });
+      const message: string = await res.json();
+      const status = res.status;
+      return { message, status };
+    },
+    onError: (error) => {
+      console.log(error);
+      alert(error);
+    },
+    onSuccess: (data) => {
+      if (data.status === 201) {
+        router.push(`/location/${location}`);
+        return;
+      }
+
+      if (data.status === 409) {
+        alert('Location already exists.');
+        return;
+      }
+
+      if (data.status === 400) {
+        alert('Invalid Request');
+        return;
+      }
+      alert('Error occurred while adding location. Please try again later.');
+    },
+  });
+  const handleAddPost: SubmitHandler<AddPost.AddPostFormData> = (data) => mutate(data);
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -62,7 +95,8 @@ export default function CreatePost() {
               title="Create Post"
               containerStyles="min-h-[35px] w-[120px] px-2 mr-2 rounded-2xl"
               textStyles="text-sm font-medium text-white"
-              handlePress={() => router.push('/home')}
+              handlePress={handleSubmit(handleAddPost)}
+              disabled={!imageValue || isPending} // Disable if image is not uploaded or mutation is pending
             />
           </View>
           <Controller
@@ -187,12 +221,6 @@ export default function CreatePost() {
               </>
             )}
           />
-          <CustomButton
-            title="Submit"
-            handlePress={handleSubmit(handleAddPost)}
-            containerStyles="mt-7"
-            // isLoading={isPending}
-          />
           <View>
             <ImagePick setValue={setValue} />
           </View>
@@ -203,15 +231,15 @@ export default function CreatePost() {
 }
 
 type ImagePickProps = {
-  setValue: UseFormSetValue<AddPost.AddPostRequestData>;
+  setValue: UseFormSetValue<AddPost.AddPostFormData>;
 };
 
 function ImagePick({ setValue }: ImagePickProps) {
   const [image, setImage] = useState<string | null>(null);
   const [imageLink, setImageLink] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false); // New state for uploading
 
   const openImagePicker = async () => {
-    // No permissions request is necessary for launching the image library
     let pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -222,6 +250,7 @@ function ImagePick({ setValue }: ImagePickProps) {
 
     if (!pickerResult.canceled) {
       setImage(pickerResult.assets[0].uri);
+      setUploading(true); // Set uploading to true when starting the upload
       let base64Img = `data:image/jpg;base64,${pickerResult.assets[0].base64}`;
       let data = {
         file: base64Img,
@@ -238,9 +267,10 @@ function ImagePick({ setValue }: ImagePickProps) {
         .then(async (r) => {
           let data = await r.json();
           setImageLink(data.url);
-          setValue('image_url', data.url); // Update image_url field in useForm
+          setValue('image', data.url); // Update image_url field in useForm
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
+        .finally(() => setUploading(false)); // Set uploading to false when upload is complete
     }
   };
 
@@ -250,7 +280,7 @@ function ImagePick({ setValue }: ImagePickProps) {
 
   const removeImage = () => {
     setImage(null);
-    setValue('image_url', ''); // Clear the image_url field in useForm
+    setValue('image', ''); // Clear the image_url field in useForm
   };
 
   return (
@@ -272,14 +302,18 @@ function ImagePick({ setValue }: ImagePickProps) {
           </TouchableOpacity>
         </View>
       )}
-      <TouchableOpacity onPress={openImagePicker}>
-        <Image
-          source={icons.addImage}
-          resizeMode="contain"
-          tintColor="#7b7b8b"
-          className="w-8 h-8"
-        />
-      </TouchableOpacity>
+      {uploading ? (
+        <ActivityIndicator size="large" color="#00ff00" />
+      ) : (
+        <TouchableOpacity onPress={openImagePicker}>
+          <Image
+            source={icons.addImage}
+            resizeMode="contain"
+            tintColor="#7b7b8b"
+            className="w-8 h-8"
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

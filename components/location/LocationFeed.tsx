@@ -69,7 +69,11 @@ export default function LocationFeed({ locationId }: { locationId: string }) {
       {/* <Text className='text-base text-white'>Post Feed</Text> */}
       {status === 'pending' ? (
         // <LoadingPost />
-        <ActivityIndicator size="large" color="#00ff00" className='flex justify-center items-center'/>
+        <ActivityIndicator
+          size="large"
+          color="#00ff00"
+          className="flex justify-center items-center"
+        />
       ) : status === 'error' ? (
         <Text>Something went wrong. Please try again later</Text>
       ) : (

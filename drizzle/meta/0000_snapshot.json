@@ -48,9 +48,7 @@
       "indexes": {
         "email_idx": {
           "name": "email_idx",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": false
         }
       },
@@ -94,9 +92,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "locations_address_unique": {
-          "columns": [
-            "address"
-          ],
+          "columns": ["address"],
           "nullsNotDistinct": false,
           "name": "locations_address_unique"
         }
@@ -173,16 +169,12 @@
       "indexes": {
         "location_id_idx": {
           "name": "location_id_idx",
-          "columns": [
-            "location_id"
-          ],
+          "columns": ["location_id"],
           "isUnique": false
         },
         "owner_id_idx": {
           "name": "owner_id_idx",
-          "columns": [
-            "owner_id"
-          ],
+          "columns": ["owner_id"],
           "isUnique": false
         }
       },
@@ -192,12 +184,8 @@
           "tableFrom": "posts",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -206,12 +194,8 @@
           "tableFrom": "posts",
           "tableTo": "locations",
           "schemaTo": "public",
-          "columnsFrom": [
-            "location_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["location_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -259,9 +243,7 @@
       "indexes": {
         "post_id_idx": {
           "name": "post_id_idx",
-          "columns": [
-            "post_id"
-          ],
+          "columns": ["post_id"],
           "isUnique": false
         }
       },
@@ -271,12 +253,8 @@
           "tableFrom": "comments",
           "tableTo": "posts",
           "schemaTo": "public",
-          "columnsFrom": [
-            "post_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["post_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -285,12 +263,8 @@
           "tableFrom": "comments",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -354,12 +328,8 @@
           "tableFrom": "preferences",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -387,9 +357,7 @@
       "indexes": {
         "user_id_idx": {
           "name": "user_id_idx",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -399,12 +367,8 @@
           "tableFrom": "users_to_locations",
           "tableTo": "locations",
           "schemaTo": "public",
-          "columnsFrom": [
-            "location_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["location_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -413,12 +377,8 @@
           "tableFrom": "users_to_locations",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -426,10 +386,7 @@
       "compositePrimaryKeys": {
         "users_to_locations_user_id_location_id": {
           "name": "users_to_locations_user_id_location_id",
-          "columns": [
-            "user_id",
-            "location_id"
-          ]
+          "columns": ["user_id", "location_id"]
         }
       },
       "uniqueConstraints": {}
@@ -458,12 +415,8 @@
           "tableFrom": "users_like_posts",
           "tableTo": "posts",
           "schemaTo": "public",
-          "columnsFrom": [
-            "post_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["post_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -472,12 +425,8 @@
           "tableFrom": "users_like_posts",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -485,10 +434,7 @@
       "compositePrimaryKeys": {
         "users_like_posts_user_id_post_id": {
           "name": "users_like_posts_user_id_post_id",
-          "columns": [
-            "user_id",
-            "post_id"
-          ]
+          "columns": ["user_id", "post_id"]
         }
       },
       "uniqueConstraints": {}
@@ -497,28 +443,12 @@
   "enums": {
     "public.month": {
       "name": "month",
-      "values": [
-        "jan",
-        "feb",
-        "mar",
-        "apr",
-        "may",
-        "jun",
-        "jul",
-        "aug",
-        "sep",
-        "nov",
-        "dec"
-      ],
+      "values": ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "nov", "dec"],
       "schema": "public"
     },
     "public.type": {
       "name": "type",
-      "values": [
-        "easy",
-        "moderate",
-        "challenging"
-      ],
+      "values": ["easy", "moderate", "challenging"],
       "schema": "public"
     }
   },

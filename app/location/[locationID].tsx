@@ -75,7 +75,7 @@ const SearchResults = () => {
                   <TouchableOpacity
                     onPress={() => {
                       console.log(`Inside on press: ${locationID}`);
-                      router.push(`createPost/${locationID}`);
+                      router.push(`/createPost/${locationID}`);
                     }}
                     className="hover:text-gray-500 border-2 bg-primary px-4 py-2 border-green-500 rounded-xl flex-row items-center space-x-2"
                   >
