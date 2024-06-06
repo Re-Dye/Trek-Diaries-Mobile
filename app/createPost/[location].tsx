@@ -12,7 +12,7 @@ import * as AddPost from '@/lib/zodSchema/addPost';
 import { useForm, Controller, SubmitHandler, UseFormSetValue } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Forms from '../../components/commons/Forms';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function CreatePost() {
   const { session } = useSessionStore();
@@ -20,6 +20,7 @@ export default function CreatePost() {
     return <Redirect href={'/sign-in'} />;
   }
   const { location } = useLocalSearchParams();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     console.log(location);
@@ -67,6 +68,7 @@ export default function CreatePost() {
     },
     onSuccess: (data) => {
       if (data.status === 201) {
+        queryClient.invalidateQueries({ queryKey: ['search', location] });
         router.push(`/location/${location}`);
         return;
       }
