@@ -68,8 +68,7 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
   };
 
   return (
-    <View className="w-full mt-4 px-5">
-      <Text className="text-2xl text-white font-psemibold">Comments</Text>
+    <View className="w-full px-5">
       <Controller
         control={control}
         name={'content'}
@@ -77,7 +76,7 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
           <>
             <Forms
               title=""
-              placeholder="write your comment ..."
+              placeholder="Add your comment ..."
               value={value}
               onChangeText={onChange}
             />
