@@ -24,7 +24,7 @@ const SearchResults = () => {
   if (!session || new Date() >= new Date(session.ein + session.iat)) {
     return <Redirect href={'/sign-in'} />;
   }
-  
+
   const { query } = useLocalSearchParams();
   const [locations, setLocations] = useState<Location[]>([]);
   const { refetch, status } = useQuery({
@@ -65,7 +65,11 @@ const SearchResults = () => {
           </View>
           <View>
             {status === 'pending' ? (
-              <ActivityIndicator size="large" color="#00ff00" className='flex justify-center items-center'/>
+              <ActivityIndicator
+                size="large"
+                color="#00ff00"
+                className="flex justify-center items-center"
+              />
             ) : (
               locations.map((location) => (
                 <SearchCard
