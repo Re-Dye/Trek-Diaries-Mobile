@@ -1,8 +1,15 @@
+import { authorize } from '@/lib/auth';
 import { getPreference } from '@/lib/db/actions';
 import { getAzureSecret, getAzureRecommendationApiUrl } from '@/lib/secrets';
 import { ReturnPreference } from '@/lib/zodSchema/dbTypes';
 
 export async function GET(req: Request) {
+  const isAuth = authorize(req);
+
+  if (!isAuth) {
+    return Response.json('Unauthorized', { status: 401 });
+  }
+
   const searchParams = new URL(req.url).searchParams;
   const userId = searchParams.get('userId');
 
@@ -24,6 +31,7 @@ export async function GET(req: Request) {
     const res = await fetch(apiUrl, {
       method: 'GET',
     });
+
     return res;
   } catch (error) {
     console.error(error);

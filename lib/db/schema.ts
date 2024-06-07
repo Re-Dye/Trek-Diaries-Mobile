@@ -9,7 +9,7 @@ import {
   uuid,
   index,
   pgEnum,
-  json,
+  uniqueIndex
 } from 'drizzle-orm/pg-core';
 import { CONSTANTS } from '../constants';
 
@@ -30,12 +30,18 @@ export const users = pgTable(
   })
 );
 
-export const locations = pgTable('locations', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  address: text('address').notNull().unique(),
-  registered_time: timestamp('registered_time', { mode: 'string' }).defaultNow().notNull(),
-  description: text('description').notNull(),
-});
+export const locations = pgTable(
+  'locations',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    address: text('address').notNull().unique(),
+    registered_time: timestamp('registered_time', { mode: 'string' }).defaultNow().notNull(),
+    description: text('description').notNull(),
+  },
+  (locations) => ({
+    addressIdx: uniqueIndex('address_idx').on(locations.address),
+  })
+);
 
 export const posts = pgTable(
   'posts',

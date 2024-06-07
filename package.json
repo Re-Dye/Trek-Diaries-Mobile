@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "format": "prettier . --write",
-    "migrations:generate": "drizzle-kit generate:pg",
+    "migrations:generate": "drizzle-kit push",
     "migrations:push": "tsx migrate.ts",
     "migrations:drop": "drizzle-kit drop --config=drizzle.config.ts",
     "migrations:pull": "drizzle-kit introspect",

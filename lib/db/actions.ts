@@ -8,7 +8,7 @@ import {
   comments,
   preferences,
 } from './schema';
-import { eq, sql, and, desc, asc, gt } from 'drizzle-orm';
+import { eq, sql, and, desc, asc, gt, like, or } from 'drizzle-orm';
 import { redis } from './upstash';
 import { cacheUserSchema, CachedUser } from '../zodSchema/cachedUser';
 import {
@@ -468,6 +468,48 @@ export const getFeed = async (
     throw new Error('Error in getting feed: ' + error);
   }
 };
+
+export const getExploreFeed = async (location: string[], limit: number, last: string) => {
+  try {
+    const exploreFeed = await db
+      .select({
+        id: posts.id,
+        registered_time: posts.registered_time,
+        description: posts.description,
+        trail_condition: posts.trail_condition,
+        weather: posts.weather,
+        accessibility: posts.accessibility,
+        rating: sql<number>`(${posts.accessibility} + ${posts.trail_condition} + ${posts.weather}) / 3`,
+        picture_url: posts.picture_url,
+        likes_count: posts.likes_count,
+        location_id: posts.location_id,
+        owner_id: posts.owner_id,
+        location_address: locations.address,
+        owner_name: users.name,
+      })
+      .from(posts)
+      .where(and(
+        gt(posts.id, last), 
+        or(...location.map((loc) => like(locations.address, `${loc}%`)))
+      ))
+      .orderBy(desc(posts.registered_time), asc(posts.id))
+      .limit(limit + 1)
+      .innerJoin(locations, eq(posts.location_id, locations.id))
+      .innerJoin(users, eq(posts.owner_id, users.id));
+
+    /* if there is a next page */
+    if (exploreFeed.length === limit + 1) {
+      const next: string = exploreFeed[exploreFeed.length - 1].id;
+      exploreFeed.pop();
+      return { posts: exploreFeed, next };
+    } else {
+      return { posts: exploreFeed, next: undefined };
+    }
+  } catch (error) {
+    console.error('Error in getting feed', error);
+    throw new Error('Error in getting feed: ' + error);
+  }
+}
 
 export const postExists = async (postId: string) => {
   try {
