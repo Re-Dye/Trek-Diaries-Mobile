@@ -20,10 +20,6 @@ const TabIcon = ({
 }) => {
   const { session } = useSessionStore();
 
-  if (!session || new Date() >= new Date(session.ein + session.iat)) {
-    return <Redirect href={'/sign-in'} />;
-  }
-
   const setLocations = useLocationStore((state) => state.setLocations);
   const { data, error, status } = useQuery({
     queryKey: ['locations'],
@@ -79,6 +75,9 @@ const TabIcon = ({
       });
     }
   }, [status, data]);
+  if (!session || new Date() >= new Date(session.ein + session.iat)) {
+    return <Redirect href={'/sign-in'} />;
+  }
 
   return (
     <View className="flex items-center justify-center gap-2">
