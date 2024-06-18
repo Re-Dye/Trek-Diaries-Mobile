@@ -63,51 +63,51 @@ export default function ViewPost({ postID }: { postID: string }) {
 
   return (
     // <Text> HI</Text>
-        <View className="mt-5 p-4 rounded-2xl">
-          <View className="flex-row items-center mt-4 gap-5 p-2 relative">
-            <View>
-              <Image source={images.userLogo} className="w-14 h-14" resizeMode="contain" />
-            </View>
-            <View className="flex-row space-x-2">
-              <View className="flex-col">
-                <Text className="text-white  font-psemibold">{post?.owner_name}</Text>
-                <Text className="text-slate-400 font-pmedium text-[12px]">
-                  {post?.location_address}
-                </Text>
-                <Text className="text-slate-500 font-pbook text-[12px]">
-                  {handleRegisteredTime(post?.registered_time || '')}
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View className="m-2">
-            <Text className="text-white font-pbook my-2 text-justify">{post?.description}</Text>
-          </View>
-          <View className="my-2 rounded-2xl">
-            {/* <Text className="text-white">{imageURL}</Text> */}
-
-            <Image
-              source={{ uri: post?.picture_url }}
-              className="h-60 w-full rounded-2xl"
-              resizeMode="contain"
-              onError={(error) => console.log('Image Load Error:', error.nativeEvent.error)}
-            />
-          </View>
-
-          <View className="flex-row justify-around mt-1 ">
-            <View className="flex-col justify-center align-middle text-center ">
-              <Text className="text-white font-pbook text-[12px]">Trail Conditon:</Text>
-              <Star stars={post?.trail_condition || 0} />
-            </View>
-            <View className="flex-col justify-center align-middle text-center">
-              <Text className="text-white font-pbook text-[12px]">Weather:</Text>
-              <Star stars={post?.weather || 0} />
-            </View>
-            <View className="flex-col justify-center align-middle text-center">
-              <Text className="text-white font-pbook text-[12px]">Accessibility:</Text>
-              <Star stars={post?.accessibility || 0} />
-            </View>
+    <View className="mt-5 p-4 rounded-2xl">
+      <View className="flex-row items-center mt-4 gap-5 p-2 relative">
+        <View>
+          <Image source={images.userLogo} className="w-14 h-14" resizeMode="contain" />
+        </View>
+        <View className="flex-row space-x-2">
+          <View className="flex-col">
+            <Text className="text-white  font-psemibold">{post?.owner_name}</Text>
+            <Text className="text-slate-400 font-pmedium text-[12px]">
+              {post?.location_address}
+            </Text>
+            <Text className="text-slate-500 font-pbook text-[12px]">
+              {handleRegisteredTime(post?.registered_time || '')}
+            </Text>
           </View>
         </View>
+      </View>
+      <View className="m-2">
+        <Text className="text-white font-pbook my-2 text-justify">{post?.description}</Text>
+      </View>
+      <View className="my-2 rounded-2xl">
+        {/* <Text className="text-white">{imageURL}</Text> */}
+
+        <Image
+          source={{ uri: post?.picture_url }}
+          className="h-60 w-full rounded-2xl"
+          resizeMode="contain"
+          onError={(error) => console.log('Image Load Error:', error.nativeEvent.error)}
+        />
+      </View>
+
+      <View className="flex-row justify-around mt-1 ">
+        <View className="flex-col justify-center align-middle text-center ">
+          <Text className="text-white font-pbook text-[12px]">Trail Conditon:</Text>
+          <Star stars={post?.trail_condition || 0} />
+        </View>
+        <View className="flex-col justify-center align-middle text-center">
+          <Text className="text-white font-pbook text-[12px]">Weather:</Text>
+          <Star stars={post?.weather || 0} />
+        </View>
+        <View className="flex-col justify-center align-middle text-center">
+          <Text className="text-white font-pbook text-[12px]">Accessibility:</Text>
+          <Star stars={post?.accessibility || 0} />
+        </View>
+      </View>
+    </View>
   );
 }

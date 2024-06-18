@@ -5,6 +5,7 @@ import { images } from '@/constants';
 import handleRegisteredTime from '@/lib/utilities/handleRegisteredTime';
 import LikeButton from './LikeButton';
 import { useRouter } from 'expo-router';
+import Star from '@/components/post/rating';
 
 interface Owner {
   id: string;
@@ -68,11 +69,16 @@ export default function FeedCard({
             onError={(error) => console.log('Image Load Error:', error.nativeEvent.error)}
           />
         </View>
-        <View className="flex-row space-x-4 items-center justify-start my-2">
+        <View className="flex-row  items-center justify-start my-2">
           <LikeButton likes={likes} postId={id} userId={userId} />
-          <TouchableOpacity onPress={() => router.push(`/post/${id}`)}>
-            <FontAwesome5 name="comment-alt" size={25} color="grey" />
-          </TouchableOpacity>
+          <View className="ml-4">
+            <TouchableOpacity onPress={() => router.push(`/post/${id}`)}>
+              <FontAwesome5 name="comment-alt" size={25} color="grey" />
+            </TouchableOpacity>
+          </View>
+          <View className="ml-36">
+            <Star stars={rating} />
+          </View>
         </View>
       </View>
     </View>

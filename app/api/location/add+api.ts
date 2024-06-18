@@ -61,9 +61,9 @@ export async function POST(req: Request) {
       pool.end();
       return res;
     } catch (error) {
-      console.error("Error in adding location", error);
+      console.error('Error in adding location', error);
       pool.end();
-      throw new Error("Error in adding location: " + error)
+      throw new Error('Error in adding location: ' + error);
     }
   } catch (error) {
     if (error instanceof ZodError) {

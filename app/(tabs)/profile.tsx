@@ -6,6 +6,7 @@ import { setStorageItemAsync } from '@/lib/storage';
 import { useRouter, router, Redirect } from 'expo-router';
 import Fbar from '@/components/followLocation/Fbar';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Preferences from '@/components/commons/Preferences';
 
 export default function Profile() {
   const { clearSession } = useSessionStore();
@@ -26,14 +27,19 @@ export default function Profile() {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
-        <View className="min-h-[60vh] p-3 justify-center">
+        <View className="min-h-[85vh] my-20 p-3 space-y-12">
+          <View className='flex-col space-y-3 bg-black-100 p-5 rounded-2xl'>
           <View className="flex-row justify-center items-center space-x-2">
             <Text className="text-2xl font-bold text-sky-500">Followed Locations</Text>
             <FontAwesome6 name="magnifying-glass-location" size={24} color="mediumseagreen" />
           </View>
-          <View className="mt-5">{session && <Fbar />}</View>
+          <View className="mt-2">{session && <Fbar />}</View>
+          </View>
           <View>
-            <CustomButton title="Logout" handlePress={handleLogout} containerStyles="mt-8" />
+            <Preferences />
+          </View>
+          <View>
+            <CustomButton title="Logout" handlePress={handleLogout} />
           </View>
         </View>
       </ScrollView>

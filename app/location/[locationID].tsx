@@ -1,6 +1,12 @@
-// app/search/[query].tsx
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
@@ -15,12 +21,10 @@ const SearchResults = () => {
   const { locationID } = useLocalSearchParams();
   const { session } = useSessionStore();
 
-  if (!session || new Date() >= new Date(session.ein + session.iat)) {
-    return <Redirect href={'/sign-in'} />;
-  }
-
   const [location, setLocation] = useState<ReturnLocation | null>(null);
-  const { data, isPending } = useQuery({
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+
+  const { data, isPending, refetch } = useQuery({
     queryKey: ['search', locationID],
     queryFn: async () => {
       const res = await fetch(`/api/location?locationId=${locationID}`, {
@@ -33,6 +37,15 @@ const SearchResults = () => {
       return { status, json };
     },
   });
+
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch().finally(() => {
+      setRefreshing(false);
+      setRefreshTrigger((prev) => !prev); // Trigger refresh in LocationFeed
+    });
+  }, [refetch]);
 
   useEffect(() => {
     if (data === undefined) {
@@ -54,9 +67,13 @@ const SearchResults = () => {
     }
   }, [data]);
 
+  if (!session || new Date() >= new Date(session.ein + session.iat)) {
+    return <Redirect href={'/sign-in'} />;
+  }
+
   return (
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
+      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <View>
           {isPending || location === null ? (
             <ActivityIndicator
@@ -75,7 +92,7 @@ const SearchResults = () => {
                   <TouchableOpacity
                     onPress={() => {
                       console.log(`Inside on press: ${locationID}`);
-                      router.push(`createPost/${locationID}`);
+                      router.push(`/createPost/${locationID}`);
                     }}
                     className="hover:text-gray-500 border-2 bg-primary px-4 py-2 border-green-500 rounded-xl flex-row items-center space-x-2"
                   >
@@ -85,7 +102,7 @@ const SearchResults = () => {
                 </View>
               </View>
               <View>
-                <LocationFeed locationId={location.id} />
+                <LocationFeed locationId={location.id} refreshTrigger={refreshTrigger} />
               </View>
             </View>
           )}

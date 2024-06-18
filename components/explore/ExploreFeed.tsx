@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Text } from 'react-native';
 import FeedCard from '../commons/FeedCard/FeedCard';
-// import LoadingPost from '../LoadingPost/LoadingPost';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { CONSTANTS } from '@/lib/constants';
 import { ReturnPost } from '@/lib/zodSchema/dbTypes';
@@ -15,27 +14,31 @@ interface Response {
   next: string;
 }
 
-interface PostFeedProps {
+export default function ExploreFeed({
+  userId,
+  locations,
+}: {
   userId: string;
-  refreshTrigger: boolean;
-  onRefetchComplete: () => void; // Callback function type
-}
-
-export default function PostFeed({ userId, refreshTrigger, onRefetchComplete }: PostFeedProps) {
+  locations: string[];
+}) {
   const [inView, setInView] = useState(false);
   const { session } = useSessionStore();
-  const { data, status, fetchNextPage, refetch } = useInfiniteQuery<Response, Error>({
-    queryKey: ['posts', 'feed', userId],
+
+  const { data, status, fetchNextPage } = useInfiniteQuery<Response, Error>({
+    enabled: userId !== undefined && locations.length > 0,
+    queryKey: ['recommendation', 'feed', userId],
     queryFn: async ({ pageParam = '00000000-0000-0000-0000-000000000000' }) => {
-      const res = await fetch(
-        `/api/feed?userId=${userId}&last=${pageParam}&limit=${CONSTANTS.POSTS_PER_SCROLL}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${session?.token}`,
-          },
-        }
-      );
+      const searchParams = new URLSearchParams({
+        location: JSON.stringify(locations),
+        limit: CONSTANTS.POSTS_PER_SCROLL.toString(),
+        last: pageParam as string | "",
+      });
+      const res = await fetch(`/api/recommendation/feed?${searchParams}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${session?.token}`,
+        },
+      });
       if (res.status === 200) {
         return res.json();
       } else if (res.status === 400) {
@@ -62,14 +65,6 @@ export default function PostFeed({ userId, refreshTrigger, onRefetchComplete }: 
     getNextPageParam: (lastPage) => lastPage?.next ?? null,
     initialPageParam: '00000000-0000-0000-0000-000000000000', // Add this line
   });
-
-  useEffect(() => {
-    if (refreshTrigger) {
-      refetch().then(() => {
-        onRefetchComplete(); // Notify Home component that refetch is complete
-      });
-    }
-  }, [refreshTrigger]);
 
   useEffect(() => {
     if (inView) {

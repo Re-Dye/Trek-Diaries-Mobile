@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Text } from 'react-native';
 import FeedCard from '../commons/FeedCard/FeedCard';
-// import LoadingPost from '../LoadingPost/LoadingPost';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { CONSTANTS } from '@/lib/constants';
 import { ReturnPost } from '@/lib/zodSchema/dbTypes';
@@ -15,10 +14,16 @@ interface Response {
   next: string;
 }
 
-export default function LocationFeed({ locationId }: { locationId: string }) {
+export default function LocationFeed({
+  locationId,
+  refreshTrigger,
+}: {
+  locationId: string;
+  refreshTrigger: boolean;
+}) {
   const [inView, setInView] = useState(false);
   const { session } = useSessionStore();
-  const { data, status, fetchNextPage } = useInfiniteQuery<Response, Error>({
+  const { data, status, fetchNextPage, refetch } = useInfiniteQuery<Response, Error>({
     queryKey: ['location', 'feed', locationId],
     queryFn: async ({ pageParam = '00000000-0000-0000-0000-000000000000' }) => {
       const res = await fetch(
@@ -54,22 +59,29 @@ export default function LocationFeed({ locationId }: { locationId: string }) {
       }
     },
     getNextPageParam: (lastPage) => lastPage?.next ?? null,
-    initialPageParam: '00000000-0000-0000-0000-000000000000', // Add this line
+    initialPageParam: '00000000-0000-0000-0000-000000000000',
   });
 
   useEffect(() => {
     if (inView) {
       fetchNextPage();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
+
+  useEffect(() => {
+    if (refreshTrigger) {
+      refetch();
+    }
+  }, [refreshTrigger]);
 
   return (
     <IOScrollView>
-      {/* <Text className='text-base text-white'>Post Feed</Text> */}
       {status === 'pending' ? (
-        // <LoadingPost />
-        <ActivityIndicator size="large" color="#00ff00" className='flex justify-center items-center'/>
+        <ActivityIndicator
+          size="large"
+          color="#00ff00"
+          className="flex justify-center items-center"
+        />
       ) : status === 'error' ? (
         <Text>Something went wrong. Please try again later</Text>
       ) : (

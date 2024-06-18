@@ -88,9 +88,12 @@ export async function GET(req: Request) {
 
       const { comments, next } = await getComments(postId, limit, last);
 
-      return Response.json(JSON.stringify({ comments, next }), {
-        status: 200,
-      });
+      return Response.json(
+        { comments, next },
+        {
+          status: 200,
+        }
+      );
     }
   } catch (error) {
     console.error(error);

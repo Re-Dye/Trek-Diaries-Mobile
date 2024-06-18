@@ -1,4 +1,4 @@
-import { pgTable, index, pgEnum, text, char, date, unique, uuid, timestamp, foreignKey, integer, primaryKey } from "drizzle-orm/pg-core"
+import { pgTable, index, pgEnum, text, char, date, uniqueIndex, unique, uuid, timestamp, foreignKey, integer, primaryKey } from "drizzle-orm/pg-core"
   import { sql } from "drizzle-orm"
 
 export const month = pgEnum("month", ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'nov', 'dec'])
@@ -27,6 +27,7 @@ export const locations = pgTable("locations", {
 },
 (table) => {
 	return {
+		address_idx: uniqueIndex("address_idx").on(table.address),
 		locations_address_unique: unique("locations_address_unique").on(table.address),
 	}
 });
