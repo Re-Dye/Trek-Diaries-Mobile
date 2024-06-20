@@ -56,18 +56,30 @@ export default function Explore() {
         type: 'error',
         text1: 'Invalid Request',
         text2: 'Please try again with valid parameters',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
       });
     } else if (locations?.status === 500) {
       Toast.show({
         type: 'error',
         text1: 'Something went wrong',
         text2: 'Please try again later',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
       });
     } else if (locations?.status === 404) {
       Toast.show({
         type: 'error',
         text1: 'Preference not found',
         text2: 'Please set your preferences',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
       });
     }
   }, [locations?.status]);
