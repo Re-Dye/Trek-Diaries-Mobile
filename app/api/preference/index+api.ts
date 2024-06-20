@@ -19,7 +19,7 @@ export async function GET(req: Request) {
       const res: ReturnPreference | null = await getPreference(postId);
 
       return Response.json(
-        { res },
+        res,
         {
           status: 200,
         }

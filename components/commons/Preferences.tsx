@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, TextInput, View, Button, Text, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'react-native-paper';
@@ -9,43 +9,134 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Forms from './Forms';
 import { MaterialIcons } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
+import { InsertPreference, ReturnPreference } from '@/lib/zodSchema/dbTypes';
+import { useSessionStore } from '@/lib/zustand/session';
 
 const trails = [
-  { label: "Aanbu Kahireni Trail", value: "Aanbu Kahireni Trail" },
-  { label: "Annapurna Base Camp Heli Trek", value: "Annapurna Base Camp Heli Trek" },
-  { label: "Annapurna Base Camp Short Trek", value: "Annapurna Base Camp Short Trek" },
-  { label: "Annapurna Base Camp Trek", value: "Annapurna Base Camp Trek" },
+  { label: 'Aanbu Kahireni Trail', value: 'Aanbu Kahireni Trail' },
+  { label: 'Annapurna Base Camp Heli Trek', value: 'Annapurna Base Camp Heli Trek' },
+  { label: 'Annapurna Base Camp Short Trek', value: 'Annapurna Base Camp Short Trek' },
+  { label: 'Annapurna Base Camp Trek', value: 'Annapurna Base Camp Trek' },
+  { label: 'Langtang Trek', value: 'Langtang Trek' },
 ];
 
 const features = [
-  { id: "village", label: "village" },
-  { id: "forest", label: "forest" },
-  { id: "mountain", label: "mountain" },
-  { id: "snow", label: "snow" },
-  { id: "viewpoint", label: "viewpoint" },
-  { id: "lake", label: "lake" },
+  { id: 'village', label: 'village' },
+  { id: 'forest', label: 'forest' },
+  { id: 'mountain', label: 'mountain' },
+  { id: 'snow', label: 'snow' },
+  { id: 'viewpoint', label: 'viewpoint' },
+  { id: 'lake', label: 'lake' },
 ];
 
-export default function Preferences() {
+export default function Preferences({ preference }: { preference: ReturnPreference | string }) {
   const queryClient = useQueryClient();
-  const { control, handleSubmit } = useForm({
+  const { session } = useSessionStore();
+  const { control, handleSubmit, setValue, formState } = useForm({
     defaultValues: {
-      type: '',
-      trail: '',
-      distance: '',
-      altitude: '',
-      month: '',
-      features: ''
+      trail: preference && typeof preference !== 'string' ? preference.trail : '',
+      type: preference && typeof preference !== 'string' ? preference.type : 'easy',
+      features: preference && typeof preference !== 'string' ? preference.features : ['village'],
+      month: preference && typeof preference !== 'string' ? preference.month : 'jan',
+      distance:
+        preference && typeof preference !== 'string' && preference.distance
+          ? preference.distance.toString()
+          : '',
+      altitude:
+        preference && typeof preference !== 'string' && preference.altitude
+          ? preference.altitude.toString()
+          : '',
     },
     resolver: zodResolver(preferSchema),
   });
 
-  const handlePref = async (data: preferData) => {
-  }
+  useEffect(() => {
+    setValue('trail', preference && typeof preference !== 'string' ? preference.trail : '');
+    setValue('type', preference && typeof preference !== 'string' ? preference.type : 'easy');
+    setValue(
+      'features',
+      preference && typeof preference !== 'string' ? preference.features : ['village']
+    );
+    setValue('month', preference && typeof preference !== 'string' ? preference.month : 'jan');
+    setValue(
+      'distance',
+      preference && typeof preference !== 'string' && preference.distance
+        ? preference.distance.toString()
+        : ''
+    );
+    setValue(
+      'altitude',
+      preference && typeof preference !== 'string' && preference.altitude
+        ? preference.altitude.toString()
+        : ''
+    );
+  }, [preference]);
+
+  const { mutate } = useMutation({
+    mutationFn: async (data: preferData) => {
+      console.log('inside mutate');
+      const req: InsertPreference = {
+        altitude: +data.altitude,
+        distance: +data.distance,
+        features: JSON.stringify(data.features),
+        month: data.month,
+        trail: data.trail,
+        type: data.type,
+        user_id: session!.id,
+      };
+      const res = await fetch(`/api/preference/add`, {
+        method: preference && !(typeof preference === 'string') ? 'PATCH' : 'POST',
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.token}`,
+        },
+        body: JSON.stringify(req),
+      });
+
+      const message = await res.json();
+      const status = res.status;
+      console.log(message, status);
+      return { message, status };
+    },
+    onSuccess: (data) => {
+      if (data.status === 201) {
+        queryClient.invalidateQueries({ queryKey: ['get-recommendations', session!.id] });
+        alert('Preference updated successfully');
+        // toast({
+        //   title: "Success",
+        //   description: preference? "Preference updated successfully" : "Preference added successfully",
+        // });
+      } else if (data.status === 400) {
+        alert('Invalid data. Please try again with valid data');
+        // toast({
+        //   title: "Error",
+        //   description: "Invalid data. Please try again with valid data",
+        // });
+      } else {
+        alert('Error updating preference');
+        // toast({
+        //   title: "Error",
+        //   description: preference? "Error updating preference" : "Error adding preference",
+        // });
+      }
+    },
+    onError: (error) => {
+      console.error(error);
+      // toast({
+      //   title: "Error",
+      //   description: `${error.message}\nPlease try again later`,
+      // });
+    },
+  });
+
+  const handlePref = async (data: any) => {
+    console.log(formState.dirtyFields.trail);
+    mutate(data);
+  };
 
   return (
-    <View className='flex-col space-y-6'>
-
+    <View className="flex-col space-y-6">
       <View className="flex-row justify-center items-center space-x-2">
         <Text className="text-2xl font-bold text-sky-500 text-center">My Preferences</Text>
         <MaterialIcons name="center-focus-strong" size={24} color="mediumseagreen" />
@@ -57,11 +148,11 @@ export default function Preferences() {
           name="type"
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <>
-              <View className='flex-col space-y-1'>
-                <Text className='text-base text-gray-100 font-pmedium'>Trekking Difficulty</Text>
-                <View className='border-2 border-black-200 bg-black-100 rounded-2xl'>
+              <View className="flex-col space-y-1">
+                <Text className="text-base text-gray-100 font-pmedium">Trekking Difficulty</Text>
+                <View className="border-2 border-black-200 bg-black-100 rounded-2xl">
                   <Picker
-                    style={{ color: "gray", fontWeight: "bold" }}
+                    style={{ color: 'gray', fontWeight: 'bold' }}
                     selectedValue={value}
                     onValueChange={onChange}
                   >
@@ -85,13 +176,16 @@ export default function Preferences() {
         <Controller
           control={control}
           name="trail"
+          defaultValue={
+            preference && typeof preference !== 'string' ? preference.trail : 'Aanbu Kahireni Trail'
+          }
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <>
-              <View className='flex-col space-y-1'>
-                <Text className='text-base text-gray-100 font-pmedium'>Interested Trails</Text>
-                <View className='border-2 border-black-200 bg-black-100 rounded-2xl'>
+              <View className="flex-col space-y-1">
+                <Text className="text-base text-gray-100 font-pmedium">Interested Trails</Text>
+                <View className="border-2 border-black-200 bg-black-100 rounded-2xl">
                   <Picker
-                    style={{ color: "gray", fontWeight: "bold" }}
+                    style={{ color: 'gray', fontWeight: 'bold' }}
                     selectedValue={value}
                     onValueChange={onChange}
                   >
@@ -114,7 +208,12 @@ export default function Preferences() {
       <View>
         <Controller
           control={control}
-          name='distance'
+          name="distance"
+          defaultValue={
+            preference && typeof preference !== 'string' && preference.distance
+              ? preference.distance.toString()
+              : ''
+          }
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <>
               <Forms
@@ -137,6 +236,11 @@ export default function Preferences() {
         <Controller
           control={control}
           name={'altitude'}
+          defaultValue={
+            preference && typeof preference !== 'string' && preference.altitude
+              ? preference.altitude.toString()
+              : ''
+          }
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <>
               <Forms
@@ -159,13 +263,20 @@ export default function Preferences() {
         <Controller
           control={control}
           name="month"
+          defaultValue={
+            preference && typeof preference !== 'string' && preference.month
+              ? preference.month
+              : undefined
+          }
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <>
-              <View className='flex-col space-y-1'>
-                <Text className='text-base text-gray-100 font-pmedium'>Prefered Trekking Month</Text>
-                <View className='border-2 border-black-200 bg-black-100 rounded-2xl'>
+              <View className="flex-col space-y-1">
+                <Text className="text-base text-gray-100 font-pmedium">
+                  Preferred Trekking Month
+                </Text>
+                <View className="border-2 border-black-200 bg-black-100 rounded-2xl">
                   <Picker
-                    style={{ color: "gray", fontWeight: "bold" }}
+                    style={{ color: 'gray', fontWeight: 'bold' }}
                     selectedValue={value}
                     onValueChange={onChange}
                   >
@@ -193,39 +304,12 @@ export default function Preferences() {
           )}
         />
       </View>
-
       <View>
-          <Controller
-            control={control}
-            name="features"
-            render={({ field }) => (
-              <>
-             <View className='flex-col space-y-1'>
-                <Text className='text-base text-gray-100 font-pmedium'>Other Interests</Text>
-                <View className='border-2 border-black-200 bg-black-100 rounded-2xl p-3 flex-row flex-wrap space-x-2'>
-                {features.map((item) => (
-                  <View key={item.id} className='flex-row items-center space-x-1'>
-                    <Checkbox
-                      color='mediumseagreen'
-                      status={field.value.includes(item.id) ? 'checked' : 'unchecked'}
-                      onPress={() => {
-                        const newValue = field.value.includes(item.id)
-                          ? field.value.filter((val) => val !== item.id)
-                          : [...field.value, item.id];
-                        field.onChange(newValue);
-                      }}
-                    />
-                    <Text className='text-base text-gray-100 font-pregular'>{item.label}</Text>
-                  </View>
-                ))}
-              </View>
-              </View>
-              </>
-            )}
-          />
-      </View>
-      <View>
-        <CustomButton title="Submit" handlePress={() => ""} containerStyles="mt-2 bg-sky-500" />
+        <CustomButton
+          title="Submit"
+          handlePress={handleSubmit(handlePref)}
+          containerStyles="mt-2 bg-sky-500"
+        />
       </View>
     </View>
   );

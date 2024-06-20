@@ -49,7 +49,6 @@ export default function Profile() {
       }
     },
   });
-  console.log(preference?.json);
 
   if (isPreferenceError) {
     throw new Error('Error while loading preferences.');

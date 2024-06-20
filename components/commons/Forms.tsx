@@ -8,6 +8,7 @@ export default function Forms({
   value,
   placeholder,
   onChangeText,
+  defaultValue,
   otherStyles,
 }: {
   title: string;
@@ -15,6 +16,7 @@ export default function Forms({
   placeholder: string;
   onChangeText: (e: string) => void;
   otherStyles?: string;
+  defaultValue?: string;
   keyboardType?: 'email-address' | 'default';
 }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +26,7 @@ export default function Forms({
       <View className="w-full flex-row h-16 px-4 border-2 border-black-200 bg-black-100 rounded-2xl focus:border-secondary items-center ">
         <TextInput
           className="flex-1 text-white font-psemibold text-base"
+          defaultValue={defaultValue}
           value={value}
           placeholder={placeholder}
           placeholderTextColor="#7b7b8b"
