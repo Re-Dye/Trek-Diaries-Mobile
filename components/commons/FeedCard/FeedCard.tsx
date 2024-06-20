@@ -39,6 +39,9 @@ export default function FeedCard({
   rating: number;
 }) {
   const router = useRouter();
+  const handleClick = () => {
+    router.push(`/location/${location.id}`);
+  };
   return (
     <View>
       <View className="m-3 p-4 bg-black-100 rounded-2xl">
@@ -49,7 +52,9 @@ export default function FeedCard({
           <View className="flex-row space-x-2">
             <View className="flex-col">
               <Text className="text-white  font-psemibold">{owner?.name}</Text>
-              <Text className="text-slate-400 font-pmedium text-[12px]">{location.address}</Text>
+              <TouchableOpacity onPress={handleClick}>
+                <Text className="text-slate-400 font-pmedium text-[12px]">{location.address}</Text>
+              </TouchableOpacity>
               <Text className="text-slate-500 font-pbook text-[12px]">
                 {handleRegisteredTime(registered_time)}
               </Text>
