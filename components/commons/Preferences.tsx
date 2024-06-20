@@ -82,12 +82,12 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
       if (data.status === 201) {
         queryClient.invalidateQueries({ queryKey: ['preference', session!.id] });
         queryClient.invalidateQueries({ queryKey: ['get-recommendations', session!.id] });
-        queryClient.invalidateQueries({ queryKey: ['recommendation', 'feed', session!.id], });
+        queryClient.invalidateQueries({ queryKey: ['recommendation', 'feed', session!.id] });
         Toast.show({
-          type: "success",
-          text1: "Success!",   
-          text2: "Preference updated successfully",
-          position: "bottom",
+          type: 'success',
+          text1: 'Success!',
+          text2: 'Preference updated successfully',
+          position: 'bottom',
           visibilityTime: 3000,
           bottomOffset: 15,
           keyboardOffset: 20,
@@ -95,10 +95,10 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
       } else if (data.status === 400) {
         alert('Invalid data. Please try again with valid data');
         Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: "Invalid data. Please try again with valid data",
-          position: "bottom",
+          type: 'error',
+          text1: 'Error',
+          text2: 'Invalid data. Please try again with valid data',
+          position: 'bottom',
           visibilityTime: 3000,
           bottomOffset: 15,
           keyboardOffset: 20,
@@ -106,10 +106,10 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
       } else {
         alert('Error updating preference');
         Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: "Error updating preference",
-          position: "bottom",
+          type: 'error',
+          text1: 'Error',
+          text2: 'Error updating preference',
+          position: 'bottom',
           visibilityTime: 3000,
           bottomOffset: 15,
           keyboardOffset: 20,
@@ -119,10 +119,10 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
     onError: (error) => {
       console.error(error);
       Toast.show({
-        type: "error",
-        text1: "Error",
+        type: 'error',
+        text1: 'Error',
         text2: `${error.message}\nPlease try again later`,
-        position: "bottom",
+        position: 'bottom',
         visibilityTime: 3000,
         bottomOffset: 15,
         keyboardOffset: 20,

@@ -92,7 +92,7 @@ export default function Post() {
     // <Text> HI</Text>
     <SafeAreaView className="bg-primary h-full">
       <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-        <IOScrollView>
+        <IOScrollView className="mt-8">
           <View>
             <ViewPost postID={postID as string} />
           </View>

@@ -18,12 +18,9 @@ export async function GET(req: Request) {
     } else {
       const res: ReturnPreference | null = await getPreference(postId);
 
-      return Response.json(
-        res,
-        {
-          status: 200,
-        }
-      );
+      return Response.json(res, {
+        status: 200,
+      });
     }
   } catch (error) {
     console.error(error);

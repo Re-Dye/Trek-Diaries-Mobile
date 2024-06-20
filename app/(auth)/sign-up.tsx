@@ -43,10 +43,10 @@ export default function SignUp() {
     onSuccess: ({ data, status }) => {
       if (status === 201) {
         Toast.show({
-          type: "success",
-          text1: "Sign Up Successful",   
-          text2: "You have successfully signed up. Please sign in to continue.",
-          position: "bottom",
+          type: 'success',
+          text1: 'Sign Up Successful',
+          text2: 'You have successfully signed up. Please sign in to continue.',
+          position: 'bottom',
           visibilityTime: 3000,
           bottomOffset: 15,
           keyboardOffset: 20,
@@ -54,30 +54,30 @@ export default function SignUp() {
         router.push('/sign-in');
       } else if (status === 400) {
         Toast.show({
-          type: "error",
-          text1: "Sign Up Failed",   
+          type: 'error',
+          text1: 'Sign Up Failed',
           text2: data,
-          position: "bottom",
+          position: 'bottom',
           visibilityTime: 3000,
           bottomOffset: 15,
           keyboardOffset: 20,
         });
       } else if (status === 409) {
         Toast.show({
-          type: "error",
-          text1: "Sign Up Failed",   
-          text2: "User already exists with this email.",
-          position: "bottom",
+          type: 'error',
+          text1: 'Sign Up Failed',
+          text2: 'User already exists with this email.',
+          position: 'bottom',
           visibilityTime: 3000,
           bottomOffset: 15,
           keyboardOffset: 20,
         });
       } else {
         Toast.show({
-          type: "error",
-          text1: "Sign Up Failed",   
-          text2: "Failed to sign up. Please try again.",
-          position: "bottom",
+          type: 'error',
+          text1: 'Sign Up Failed',
+          text2: 'Failed to sign up. Please try again.',
+          position: 'bottom',
           visibilityTime: 3000,
           bottomOffset: 15,
           keyboardOffset: 20,
@@ -87,10 +87,10 @@ export default function SignUp() {
     onError: (error) => {
       console.log('Error', error);
       Toast.show({
-        type: "error",
-        text1: "Sign Up Failed",   
-        text2: "Failed to sign up. Please try again later.",
-        position: "bottom",
+        type: 'error',
+        text1: 'Sign Up Failed',
+        text2: 'Failed to sign up. Please try again later.',
+        position: 'bottom',
         visibilityTime: 3000,
         bottomOffset: 15,
         keyboardOffset: 20,

@@ -9,7 +9,7 @@ import {
   uuid,
   index,
   pgEnum,
-  uniqueIndex
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { CONSTANTS } from '../constants';
 

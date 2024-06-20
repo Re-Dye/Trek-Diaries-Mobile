@@ -45,10 +45,10 @@ export default function SignIn() {
         alert(data);
       } else {
         Toast.show({
-          type: "error",
-          text1: "Sign In Failed",   
-          text2: "Failed to sign in. Please try again.",
-          position: "bottom",
+          type: 'error',
+          text1: 'Sign In Failed',
+          text2: 'Failed to sign in. Please try again.',
+          position: 'bottom',
           visibilityTime: 3000,
           bottomOffset: 15,
           keyboardOffset: 20,
@@ -58,10 +58,10 @@ export default function SignIn() {
     onError: (error) => {
       console.log('Error', error);
       Toast.show({
-        type: "error",
-        text1: "Sign Up Failed",   
-        text2: "Failed to sign up. Please try again.",
-        position: "bottom",
+        type: 'error',
+        text1: 'Sign Up Failed',
+        text2: 'Failed to sign up. Please try again.',
+        position: 'bottom',
         visibilityTime: 3000,
         bottomOffset: 15,
         keyboardOffset: 20,

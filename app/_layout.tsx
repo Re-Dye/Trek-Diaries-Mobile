@@ -14,15 +14,21 @@ const toastConfig = {
   success: (props: any) => (
     <SuccessToast
       {...props}
-      style={{ borderLeftColor: 'green', width:"90%", borderLeftWidth: 8, backgroundColor: "white", borderRadius: 10 }}
+      style={{
+        borderLeftColor: 'green',
+        width: '90%',
+        borderLeftWidth: 8,
+        backgroundColor: 'white',
+        borderRadius: 10,
+      }}
       contentContainerStyle={{ paddingHorizontal: 20 }}
       text1Style={{
         fontSize: 15,
-        fontWeight: '600'
+        fontWeight: '600',
       }}
       text2Style={{
         fontSize: 12,
-        fontWeight: '500'
+        fontWeight: '500',
       }}
     />
   ),
@@ -32,16 +38,22 @@ const toastConfig = {
   */
   error: (props: any) => (
     <ErrorToast
-    style={{ borderLeftColor: 'red', width:"90%", borderLeftWidth: 8, backgroundColor: "white", borderRadius: 10 }}
-    contentContainerStyle={{ paddingHorizontal: 20 }}
-    text1Style={{
-      fontSize: 15,
-      fontWeight: '600'
-    }}
-    text2Style={{
-      fontSize: 12,
-      fontWeight: '500'
-    }}
+      style={{
+        borderLeftColor: 'red',
+        width: '90%',
+        borderLeftWidth: 8,
+        backgroundColor: 'white',
+        borderRadius: 10,
+      }}
+      contentContainerStyle={{ paddingHorizontal: 20 }}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: '600',
+      }}
+      text2Style={{
+        fontSize: 12,
+        fontWeight: '500',
+      }}
     />
   ),
 };
@@ -94,7 +106,7 @@ export default function RootLayout(props: any) {
         <Stack.Screen name="create/addlocation" options={{ headerShown: false }} />
         <Stack.Screen name="post/[postID]" options={{ headerShown: false }} />
       </Stack>
-      <Toast config={toastConfig}/>
+      <Toast config={toastConfig} />
     </QueryClientProvider>
   );
 }

@@ -18,11 +18,11 @@ export async function GET(req: Request) {
       return Response.json('Invalid Request', { status: 400 });
     } else {
       const limit = +_limit;
-      
+
       if (isNaN(limit)) {
         return Response.json('Invalid Request', { status: 400 });
       }
-      
+
       const locations: string[] = JSON.parse(_locations);
 
       const { posts, next } = await getExploreFeed(locations, limit, last);

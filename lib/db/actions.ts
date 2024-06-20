@@ -471,7 +471,15 @@ export const getFeed = async (
 
 export const getExploreFeed = async (location: string[], limit: number, last: string) => {
   try {
-    const exploreFeed = await db
+    const sq = db
+      .select({
+        id: locations.id,
+        address: locations.address,
+      })
+      .from(locations)
+      .where(or(...location.map((loc) => like(locations.address, `${loc}%`))))
+      .as('sq');
+    const query = db
       .select({
         id: posts.id,
         registered_time: posts.registered_time,
@@ -484,17 +492,21 @@ export const getExploreFeed = async (location: string[], limit: number, last: st
         likes_count: posts.likes_count,
         location_id: posts.location_id,
         owner_id: posts.owner_id,
-        location_address: locations.address,
+        location_address: sq.address,
         owner_name: users.name,
       })
-      .from(posts)
-      .where(
-        and(gt(posts.id, last), or(...location.map((loc) => like(locations.address, `${loc}%`))))
-      )
+      .from(sq)
+      .where(gt(posts.id, sql.placeholder('last')))
       .orderBy(desc(posts.registered_time), asc(posts.id))
-      .limit(limit + 1)
-      .innerJoin(locations, eq(posts.location_id, locations.id))
-      .innerJoin(users, eq(posts.owner_id, users.id));
+      .limit(sql.placeholder('limit'))
+      .innerJoin(posts, eq(sq.id, posts.location_id))
+      .innerJoin(users, eq(posts.owner_id, users.id))
+      .prepare('explore_feed');
+
+    const exploreFeed = await query.execute({
+      last,
+      limit: limit + 1,
+    });
 
     /* if there is a next page */
     if (exploreFeed.length === limit + 1) {
