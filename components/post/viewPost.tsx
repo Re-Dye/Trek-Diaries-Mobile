@@ -24,6 +24,9 @@ export default function ViewPost({ postID }: { postID: string }) {
       try {
         const res: Response = await fetch(`/api/post/getPost?postId=${postID}`, {
           method: 'GET',
+          headers: {
+            Authorization: `Bearer ${session?.token}`,
+          },
         });
         const json = await res.json();
         const status = res.status;

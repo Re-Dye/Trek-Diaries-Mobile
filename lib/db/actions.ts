@@ -488,10 +488,9 @@ export const getExploreFeed = async (location: string[], limit: number, last: st
         owner_name: users.name,
       })
       .from(posts)
-      .where(and(
-        gt(posts.id, last), 
-        or(...location.map((loc) => like(locations.address, `${loc}%`)))
-      ))
+      .where(
+        and(gt(posts.id, last), or(...location.map((loc) => like(locations.address, `${loc}%`))))
+      )
       .orderBy(desc(posts.registered_time), asc(posts.id))
       .limit(limit + 1)
       .innerJoin(locations, eq(posts.location_id, locations.id))
@@ -509,7 +508,7 @@ export const getExploreFeed = async (location: string[], limit: number, last: st
     console.error('Error in getting feed', error);
     throw new Error('Error in getting feed: ' + error);
   }
-}
+};
 
 export const postExists = async (postId: string) => {
   try {

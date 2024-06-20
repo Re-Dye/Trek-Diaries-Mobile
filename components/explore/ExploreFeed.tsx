@@ -17,21 +17,25 @@ interface Response {
 export default function ExploreFeed({
   userId,
   locations,
+  refreshTrigger,
+  onRefetchComplete,
 }: {
   userId: string;
   locations: string[];
+  refreshTrigger: boolean;
+  onRefetchComplete: () => void;
 }) {
   const [inView, setInView] = useState(false);
   const { session } = useSessionStore();
 
-  const { data, status, fetchNextPage } = useInfiniteQuery<Response, Error>({
+  const { data, status, fetchNextPage, refetch } = useInfiniteQuery<Response, Error>({
     enabled: userId !== undefined && locations.length > 0,
     queryKey: ['recommendation', 'feed', userId],
     queryFn: async ({ pageParam = '00000000-0000-0000-0000-000000000000' }) => {
       const searchParams = new URLSearchParams({
         location: JSON.stringify(locations),
         limit: CONSTANTS.POSTS_PER_SCROLL.toString(),
-        last: pageParam as string | "",
+        last: pageParam as string | '',
       });
       const res = await fetch(`/api/recommendation/feed?${searchParams}`, {
         method: 'GET',
@@ -65,6 +69,14 @@ export default function ExploreFeed({
     getNextPageParam: (lastPage) => lastPage?.next ?? null,
     initialPageParam: '00000000-0000-0000-0000-000000000000', // Add this line
   });
+
+  useEffect(() => {
+    if (refreshTrigger) {
+      refetch().then(() => {
+        onRefetchComplete(); // Notify Home component that refetch is complete
+      });
+    }
+  }, [refreshTrigger]);
 
   useEffect(() => {
     if (inView) {

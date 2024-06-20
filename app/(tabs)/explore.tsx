@@ -1,5 +1,5 @@
-import { View, ScrollView, Text } from 'react-native';
-import React, { useEffect } from 'react';
+import { View, ScrollView, Text, RefreshControl } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchBar from '@/components/search/SearchBar';
 import { Redirect, useRouter } from 'expo-router';
@@ -12,6 +12,19 @@ export default function Explore() {
   const { session } = useSessionStore();
   const router = useRouter();
 
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+
+  const handleRefetchComplete = useCallback(() => {
+    setRefreshing(false);
+    setRefreshTrigger((prev) => !prev); // Trigger refresh in PostFeed
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // Call refetch indirectly through refreshTrigger change in PostFeed
+    setRefreshTrigger((prev) => !prev);
+  }, []);
   if (!session || new Date() >= new Date(session.ein + session.iat)) {
     return <Redirect href={'/sign-in'} />;
   }
@@ -61,7 +74,7 @@ export default function Explore() {
 
   return (
     <SafeAreaView className=" h-full mt-2 bg-primary">
-      <ScrollView>
+      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <View>
           <SearchBar initialQuery="" />
           {isPending ? (
@@ -69,8 +82,14 @@ export default function Explore() {
           ) : (
             session &&
             !isPending &&
-            locations?.json &&
-            <ExploreFeed userId={session.id} locations={locations.json.recommended_locations} />
+            locations?.json && (
+              <ExploreFeed
+                userId={session.id}
+                locations={locations.json.recommended_locations}
+                refreshTrigger={refreshTrigger}
+                onRefetchComplete={handleRefetchComplete}
+              />
+            )
           )}
         </View>
       </ScrollView>
