@@ -18,7 +18,9 @@ export default function CustomButton({
 }) {
   return (
     <TouchableOpacity
-      onPress={handlePress}
+      onPress={() => {
+        handlePress();
+      }}
       activeOpacity={0.7}
       className={`bg-green-500 rounded-xl justify-center items-center min-h-[62px] ${containerStyles} ${
         isLoading ? 'opacity-50' : ''

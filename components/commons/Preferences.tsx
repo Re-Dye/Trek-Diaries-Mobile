@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, TextInput, View, Button, Text, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'react-native-paper';
@@ -9,34 +9,35 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Forms from './Forms';
 import { MaterialIcons } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
-import { InsertPreference, ReturnPreference } from '@/lib/zodSchema/dbTypes';
+import { ReturnPreference, InsertPreference } from '@/lib/zodSchema/dbTypes';
 import { useSessionStore } from '@/lib/zustand/session';
 
 const trails = [
   { label: 'Aanbu Kahireni Trail', value: 'Aanbu Kahireni Trail' },
   { label: 'Annapurna Base Camp Heli Trek', value: 'Annapurna Base Camp Heli Trek' },
-  { label: 'Annapurna Base Camp Short Trek', value: 'Annapurna Base Camp Short Trek' },
-  { label: 'Annapurna Base Camp Trek', value: 'Annapurna Base Camp Trek' },
+  { label: 'Everest Base Camp', value: 'Everest Base Camp' },
+  { label: 'Dhaulagiri Cricuit Trek', value: 'Dhaulagiri Cricuit Trek' },
   { label: 'Langtang Trek', value: 'Langtang Trek' },
 ];
 
-const features = [
-  { id: 'village', label: 'village' },
-  { id: 'forest', label: 'forest' },
-  { id: 'mountain', label: 'mountain' },
-  { id: 'snow', label: 'snow' },
-  { id: 'viewpoint', label: 'viewpoint' },
-  { id: 'lake', label: 'lake' },
-];
-
 export default function Preferences({ preference }: { preference: ReturnPreference | string }) {
-  const queryClient = useQueryClient();
   const { session } = useSessionStore();
-  const { control, handleSubmit, setValue, formState } = useForm({
+  const queryClient = useQueryClient();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       trail: preference && typeof preference !== 'string' ? preference.trail : '',
       type: preference && typeof preference !== 'string' ? preference.type : 'easy',
-      features: preference && typeof preference !== 'string' ? preference.features : ['village'],
+      features: (() => {
+        if (typeof preference !== 'string' && Array.isArray(preference?.features)) {
+          return preference.features;
+        } else {
+          return ['village']; // Default to an array with a default feature if no preference or invalid data
+        }
+      })(),
       month: preference && typeof preference !== 'string' ? preference.month : 'jan',
       distance:
         preference && typeof preference !== 'string' && preference.distance
@@ -49,28 +50,6 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
     },
     resolver: zodResolver(preferSchema),
   });
-
-  useEffect(() => {
-    setValue('trail', preference && typeof preference !== 'string' ? preference.trail : '');
-    setValue('type', preference && typeof preference !== 'string' ? preference.type : 'easy');
-    setValue(
-      'features',
-      preference && typeof preference !== 'string' ? preference.features : ['village']
-    );
-    setValue('month', preference && typeof preference !== 'string' ? preference.month : 'jan');
-    setValue(
-      'distance',
-      preference && typeof preference !== 'string' && preference.distance
-        ? preference.distance.toString()
-        : ''
-    );
-    setValue(
-      'altitude',
-      preference && typeof preference !== 'string' && preference.altitude
-        ? preference.altitude.toString()
-        : ''
-    );
-  }, [preference]);
 
   const { mutate } = useMutation({
     mutationFn: async (data: preferData) => {
@@ -131,7 +110,6 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
   });
 
   const handlePref = async (data: any) => {
-    console.log(formState.dirtyFields.trail);
     mutate(data);
   };
 
@@ -176,9 +154,6 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
         <Controller
           control={control}
           name="trail"
-          defaultValue={
-            preference && typeof preference !== 'string' ? preference.trail : 'Aanbu Kahireni Trail'
-          }
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <>
               <View className="flex-col space-y-1">
@@ -209,11 +184,6 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
         <Controller
           control={control}
           name="distance"
-          defaultValue={
-            preference && typeof preference !== 'string' && preference.distance
-              ? preference.distance.toString()
-              : ''
-          }
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <>
               <Forms
@@ -235,12 +205,7 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
       <View>
         <Controller
           control={control}
-          name={'altitude'}
-          defaultValue={
-            preference && typeof preference !== 'string' && preference.altitude
-              ? preference.altitude.toString()
-              : ''
-          }
+          name="altitude"
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <>
               <Forms
@@ -263,11 +228,6 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
         <Controller
           control={control}
           name="month"
-          defaultValue={
-            preference && typeof preference !== 'string' && preference.month
-              ? preference.month
-              : undefined
-          }
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <>
               <View className="flex-col space-y-1">
@@ -304,10 +264,13 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
           )}
         />
       </View>
+
       <View>
         <CustomButton
           title="Submit"
-          handlePress={handleSubmit(handlePref)}
+          handlePress={handleSubmit((data) => {
+            handlePref(data);
+          })}
           containerStyles="mt-2 bg-sky-500"
         />
       </View>
