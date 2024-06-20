@@ -13,6 +13,7 @@ import { useForm, Controller, SubmitHandler, UseFormSetValue } from 'react-hook-
 import { zodResolver } from '@hookform/resolvers/zod';
 import Forms from '../../components/commons/Forms';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
 
 export default function CreatePost() {
   const { session } = useSessionStore();
@@ -74,15 +75,39 @@ export default function CreatePost() {
       }
 
       if (data.status === 409) {
-        alert('Location already exists.');
+        Toast.show({
+          type: 'error',
+          text1: 'Location already exists',
+          text2: 'Please try with a different location',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
         return;
       }
 
       if (data.status === 400) {
-        alert('Invalid Request');
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid Request',
+          text2: 'Please try again later with proper information',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
         return;
       }
-      alert('Error occurred while adding location. Please try again later.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Error occurred while adding location. Please try again later.',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
     },
   });
   const handleAddPost: SubmitHandler<AddPost.AddPostFormData> = (data) => mutate(data);

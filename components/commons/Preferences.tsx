@@ -92,30 +92,41 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
           bottomOffset: 15,
           keyboardOffset: 20,
         });
-        // toast({
-        //   title: "Success",
-        //   description: preference? "Preference updated successfully" : "Preference added successfully",
-        // });
       } else if (data.status === 400) {
         alert('Invalid data. Please try again with valid data');
-        // toast({
-        //   title: "Error",
-        //   description: "Invalid data. Please try again with valid data",
-        // });
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Invalid data. Please try again with valid data",
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
       } else {
         alert('Error updating preference');
-        // toast({
-        //   title: "Error",
-        //   description: preference? "Error updating preference" : "Error adding preference",
-        // });
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Error updating preference",
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
       }
     },
     onError: (error) => {
       console.error(error);
-      // toast({
-      //   title: "Error",
-      //   description: `${error.message}\nPlease try again later`,
-      // });
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: `${error.message}\nPlease try again later`,
+        position: "bottom",
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
     },
   });
 

@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Action } from '@/lib/zodSchema/followLocation';
 import { UsersToLocations, usersToLocationsSchema } from '@/lib/zodSchema/dbTypes';
 import { useSessionStore } from '@/lib/zustand/session';
+import Toast from 'react-native-toast-message';
 
 export default function FollowButton({
   locationID,
@@ -39,40 +40,50 @@ export default function FollowButton({
     },
     onSuccess: async (data) => {
       if (data === undefined) {
-        // toast({
-        //   className:
-        //     "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-        //   description:
-        //     "Error occured while following location. Please try again later.",
-        // });
+        Toast.show({
+          text1: 'Error',
+          text2: 'Error occured. Please try again later.',
+          type: 'error',
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
         return;
       }
       if (data.status === 201) {
         await queryClient.refetchQueries({ queryKey: ['locations'] });
         return;
       } else if (data.status === 409) {
-        // toast({
-        //   className:
-        //     "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-        //   title: "Already Followed",
-        //   description: "You are already following this location",
-        // });
+        Toast.show({
+          type: 'error',
+          text1: 'Already Followed',
+          text2: 'You are already following this location',
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
       } else if (data.status === 400) {
-        // toast({
-        //   className:
-        //     "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-        //   title: "Invalid Request",
-        //   description: "Please try again later with proper information.",
-        // });
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid Request',
+          text2: 'Please try again later with proper information',
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
       } else {
-        // toast({
-        //   variant: "destructive",
-        //   className:
-        //     "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-        //   description:
-        //     "Error occured while following location. Please try again later.",
-        //   action: <ToastAction altText="Try again">Try again</ToastAction>,
-        // });
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Error occured while following location. Please try again later.',
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
       }
     },
     onError: (error) => {

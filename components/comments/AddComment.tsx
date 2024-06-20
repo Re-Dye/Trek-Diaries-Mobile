@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addCommentFormData, addCommentFormSchema } from '@/lib/zodSchema/addComment';
 import { useSessionStore } from '@/lib/zustand/session';
+import Toast from 'react-native-toast-message';
 
 export default function AddComment({ postID, userId }: { postID: string; userId: string }) {
   const { session } = useSessionStore();
@@ -50,16 +51,28 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
         return;
       }
 
-      if (data.status === 409) {
-        alert('Location already exists.');
-        return;
-      }
-
       if (data.status === 400) {
         alert('Invalid Request');
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid Request',
+          text2: 'Please try again with valid parameters',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
         return;
       }
-      alert('Error occured while adding comments. Please try again later.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Error occured while adding comments. Please try again later.',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
     },
   });
 

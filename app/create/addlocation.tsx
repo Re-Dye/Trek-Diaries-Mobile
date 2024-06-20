@@ -12,6 +12,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { AddLocationFormData, AddLocationFormSchema } from '@/lib/zodSchema/addLocation';
 import { ReturnLocation, selectLocationSchema } from '@/lib/zodSchema/dbTypes';
 import { useSessionStore } from '@/lib/zustand/session';
+import Toast from 'react-native-toast-message';
 
 export default function AddLocation() {
   const { session } = useSessionStore();
@@ -58,30 +59,39 @@ export default function AddLocation() {
       }
 
       if (data.status === 409) {
-        alert('Location already exists.');
-        // toast({
-        //   className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-        //   description: "Location already exists."
-        // })
+        Toast.show({
+          type: 'error',
+          text1: 'Location already exists',
+          text2: 'Please try with a different location',
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
         return;
       }
 
       if (data.status === 400) {
-        alert('Invalid Request');
-        // toast({
-        //   className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-        //   title: "Invalid Request",
-        //   description: "Please try again later with proper information."
-        // })
+        Toast.show({
+          type: 'error',
+          text1: 'Invalid Request',
+          text2: 'Please try again later with proper information',
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
         return;
       }
-      alert('Error occured while adding location. Please try again later.');
-      // toast({
-      //   variant: "destructive",
-      //   className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-      //   description: "Error occured while adding location. Please try again later.",
-      //   action: <ToastAction altText="Try again">Try again</ToastAction>,
-      // })
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Error occured while adding location. Please try again later.',
+        position: "bottom",
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
     },
   });
 

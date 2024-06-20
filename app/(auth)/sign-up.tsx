@@ -12,6 +12,7 @@ import { signupFormSchema } from '@/lib/zodSchema/signup';
 import { zodResolver } from '@hookform/resolvers/zod';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { MaterialIcons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 export default function SignUp() {
   const router = useRouter();
@@ -41,21 +42,59 @@ export default function SignUp() {
     },
     onSuccess: ({ data, status }) => {
       if (status === 201) {
-        alert(
-          'The verification mail has been sent to your email. Please verify your email to login.'
-        );
+        Toast.show({
+          type: "success",
+          text1: "Sign Up Successful",   
+          text2: "You have successfully signed up. Please sign in to continue.",
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
         router.push('/sign-in');
       } else if (status === 400) {
-        alert(data);
+        Toast.show({
+          type: "error",
+          text1: "Sign Up Failed",   
+          text2: data,
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
       } else if (status === 409) {
-        alert('Email already exists. Please try with another email.');
+        Toast.show({
+          type: "error",
+          text1: "Sign Up Failed",   
+          text2: "User already exists with this email.",
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
       } else {
-        alert('Server Error occured. Please try again later.');
+        Toast.show({
+          type: "error",
+          text1: "Sign Up Failed",   
+          text2: "Failed to sign up. Please try again.",
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
       }
     },
     onError: (error) => {
       console.log('Error', error);
-      alert('Some error occured. Please try again later.');
+      Toast.show({
+        type: "error",
+        text1: "Sign Up Failed",   
+        text2: "Failed to sign up. Please try again later.",
+        position: "bottom",
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
     },
   });
 

@@ -57,7 +57,15 @@ export default function SignIn() {
     },
     onError: (error) => {
       console.log('Error', error);
-      alert('Some error occured. Please try again later.');
+      Toast.show({
+        type: "error",
+        text1: "Sign Up Failed",   
+        text2: "Failed to sign up. Please try again.",
+        position: "bottom",
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
     },
   });
   const handleSignIn = async (data: LoginFormData) => {

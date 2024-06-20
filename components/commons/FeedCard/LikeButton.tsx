@@ -125,9 +125,13 @@ export default function LikeButton({
 
       if (data.status === 401) {
         Toast.show({
-          text1: 'Error',
-          text2: 'Unauthorized. Please login to like the post.',
           type: 'error',
+          text1: 'Error',
+          text2: 'Please login to like the post',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
         });
         router.push('/sign-in');
         return;
@@ -143,9 +147,13 @@ export default function LikeButton({
 
       if (data.status === 409) {
         Toast.show({
-          text1: 'Error',
-          text2: `Post already ${actionRef.current}d.`,
           type: 'error',
+          text1: 'Error',
+          text2: 'Post already liked.',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
         });
         return;
       }
@@ -155,6 +163,10 @@ export default function LikeButton({
           text1: 'Error',
           text2: 'Post not found. The post has been deleted or does not exist.',
           type: 'error',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
         });
         return;
       }
@@ -164,6 +176,10 @@ export default function LikeButton({
           text1: 'Error',
           text2: 'Invalid request. Please try again later with valid data.',
           type: 'error',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
         });
         return;
       }
@@ -172,6 +188,10 @@ export default function LikeButton({
         text1: 'Error',
         text2: 'Error occured. Please try again later.',
         type: 'error',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
       });
     },
   });
@@ -182,6 +202,10 @@ export default function LikeButton({
         text1: 'Error',
         text2: 'Previous request is still pending. Please wait for it to complete.',
         type: 'error',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
       });
     } else {
       mutate();
