@@ -23,10 +23,6 @@ export default function CreatePost() {
   const { location } = useLocalSearchParams();
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    console.log(location);
-  }, []);
-
   const { control, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       description: '',

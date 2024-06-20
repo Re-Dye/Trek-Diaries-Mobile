@@ -75,7 +75,6 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
 
       const message = await res.json();
       const status = res.status;
-      console.log(message, status);
       return { message, status };
     },
     onSuccess: (data) => {

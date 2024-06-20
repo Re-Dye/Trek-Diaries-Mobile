@@ -45,6 +45,10 @@ const TabIcon = ({
           type: 'error',
           text1: 'Error',
           text2: 'Error occurred while following location. Please try again later.',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
         });
         return;
       }
@@ -56,12 +60,20 @@ const TabIcon = ({
           type: 'error',
           text1: 'Invalid Request',
           text2: 'Please try again later with proper information.',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
         });
       } else {
         Toast.show({
           type: 'error',
           text1: 'Error',
           text2: 'Error occurred while following location. Please try again later.',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
         });
       }
     }
@@ -72,6 +84,10 @@ const TabIcon = ({
         type: 'error',
         text1: 'Error',
         text2: 'Error occurred while following location. Please try again later.',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
       });
     }
   }, [status, data]);

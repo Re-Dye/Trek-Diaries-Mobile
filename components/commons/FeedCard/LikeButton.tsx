@@ -56,6 +56,10 @@ export default function LikeButton({
         text1: 'Error',
         text2: 'Invalid request. Please try again later with valid data.',
         type: 'error',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
       });
       return;
     }
@@ -64,6 +68,10 @@ export default function LikeButton({
       text1: 'Error',
       text2: 'Error occured. Please try again later.',
       type: 'error',
+      position: 'bottom',
+      visibilityTime: 3000,
+      bottomOffset: 15,
+      keyboardOffset: 20,
     });
   }, [data]);
 

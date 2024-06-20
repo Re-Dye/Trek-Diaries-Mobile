@@ -88,14 +88,30 @@ export default function FollowButton({
     },
     onError: (error) => {
       console.log(error);
-      alert(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Error occured while following location. Please try again later.',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
     },
   });
 
   /* handleFollow handles the follow event, i.e. it adds the location id to the users location */
   const handleToggleFollow = (action: Action) => {
     if (isPending) {
-      alert('Previos action is being processed. Please wait for it to complete.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Previous action is still pending. Please wait for it to complete.',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
       return;
     }
     mutate(action);

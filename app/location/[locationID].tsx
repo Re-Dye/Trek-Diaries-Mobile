@@ -16,6 +16,7 @@ import LocationFeed from '@/components/location/LocationFeed';
 import { Ionicons } from '@expo/vector-icons';
 import LocationCard from '@/components/location/LocationCard';
 import FollowButton from '@/components/location/FollowButton';
+import Toast from 'react-native-toast-message';
 
 const SearchResults = () => {
   const { locationID } = useLocalSearchParams();
@@ -56,13 +57,37 @@ const SearchResults = () => {
       const location: ReturnLocation = data.json;
       setLocation(location);
     } else if (data.status === 400) {
-      alert(data.json);
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid Request',
+        text2: 'Please try again with valid parameters',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
       router.push('/home');
     } else if (data.status === 500) {
-      alert('Some error occurred. Please try again later.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Some error occurred. Please try again later.',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
       router.push('/home');
     } else if (data.status === 401) {
-      alert('Unauthorized. Please login first.');
+      Toast.show({
+        type: 'error',
+        text1: 'Unauthorized',
+        text2: 'Please login to view feed',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
       router.push('/sign-in');
     }
   }, [data]);

@@ -42,7 +42,15 @@ export default function AddComment({ postID, userId }: { postID: string; userId:
     },
     onError: (error) => {
       console.log(error);
-      alert(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Error occured while adding comments. Please try again later.',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 15,
+        keyboardOffset: 20,
+      });
     },
     onSuccess: (data) => {
       if (data.status === 201) {
