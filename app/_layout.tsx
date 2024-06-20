@@ -5,11 +5,48 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { getStorateItemAsync } from '@/lib/storage';
 import { useSessionStore } from '@/lib/zustand/session';
+import Toast, { BaseToast, ErrorToast, SuccessToast } from 'react-native-toast-message';
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
-export default function RootLayout() {
+const toastConfig = {
+  success: (props: any) => (
+    <SuccessToast
+      {...props}
+      style={{ borderLeftColor: 'green', width:"90%", borderLeftWidth: 8, backgroundColor: "white", borderRadius: 10 }}
+      contentContainerStyle={{ paddingHorizontal: 20 }}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: '600'
+      }}
+      text2Style={{
+        fontSize: 12,
+        fontWeight: '500'
+      }}
+    />
+  ),
+  /*
+    Overwrite 'error' type,
+    by modifying the existing ErrorToast component
+  */
+  error: (props: any) => (
+    <ErrorToast
+    style={{ borderLeftColor: 'red', width:"90%", borderLeftWidth: 8, backgroundColor: "white", borderRadius: 10 }}
+    contentContainerStyle={{ paddingHorizontal: 20 }}
+    text1Style={{
+      fontSize: 15,
+      fontWeight: '600'
+    }}
+    text2Style={{
+      fontSize: 12,
+      fontWeight: '500'
+    }}
+    />
+  ),
+};
+
+export default function RootLayout(props: any) {
   const [fontsLoaded, error] = useFonts({
     'Poppins-Black': require('../assets/fonts/Poppins-Black.ttf'),
     'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
@@ -57,6 +94,7 @@ export default function RootLayout() {
         <Stack.Screen name="create/addlocation" options={{ headerShown: false }} />
         <Stack.Screen name="post/[postID]" options={{ headerShown: false }} />
       </Stack>
+      <Toast config={toastConfig}/>
     </QueryClientProvider>
   );
 }

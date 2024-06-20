@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { SafeAreaView, TextInput, View, Button, Text, ScrollView } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { Checkbox } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { preferData, preferSchema } from '@/lib/zodSchema/preference';
@@ -11,6 +10,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 import { ReturnPreference, InsertPreference } from '@/lib/zodSchema/dbTypes';
 import { useSessionStore } from '@/lib/zustand/session';
+import Toast from 'react-native-toast-message';
 
 const trails = [
   { label: 'Aanbu Kahireni Trail', value: 'Aanbu Kahireni Trail' },
@@ -80,8 +80,18 @@ export default function Preferences({ preference }: { preference: ReturnPreferen
     },
     onSuccess: (data) => {
       if (data.status === 201) {
+        queryClient.invalidateQueries({ queryKey: ['preference', session!.id] });
         queryClient.invalidateQueries({ queryKey: ['get-recommendations', session!.id] });
-        alert('Preference updated successfully');
+        queryClient.invalidateQueries({ queryKey: ['recommendation', 'feed', session!.id], });
+        Toast.show({
+          type: "success",
+          text1: "Success!",   
+          text2: "Preference updated successfully",
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
         // toast({
         //   title: "Success",
         //   description: preference? "Preference updated successfully" : "Preference added successfully",

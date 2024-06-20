@@ -12,6 +12,7 @@ import { setStorageItemAsync } from '@/lib/storage';
 import { Controller, useForm } from 'react-hook-form';
 import { LoginFormData, loginSchema } from '@/lib/zodSchema/login';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Toast from 'react-native-toast-message';
 
 export default function SignIn() {
   const { setSession } = useSessionStore();
@@ -43,7 +44,15 @@ export default function SignIn() {
       } else if (status === 400) {
         alert(data);
       } else {
-        alert('Server Error occured. Please try again later.');
+        Toast.show({
+          type: "error",
+          text1: "Sign In Failed",   
+          text2: "Failed to sign in. Please try again.",
+          position: "bottom",
+          visibilityTime: 3000,
+          bottomOffset: 15,
+          keyboardOffset: 20,
+        });
       }
     },
     onError: (error) => {
